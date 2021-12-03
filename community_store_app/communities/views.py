@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.db.models import Sum
 
 from .models import Community, Product
 
@@ -26,7 +27,12 @@ def add_product(request):
     return render(request, "products/add_product.html")
 
 def basket_page(request):
-    return render(request, "products/basket_page.html")
+    content = {
+        "products": Product.objects.all(),
+        "subtotal": Product.objects.aggregate(subtotal=Sum('price'))['subtotal'],
+        "total": Product.objects.aggregate(total=Sum('price'))['total']
+    }
+    return render(request, "products/basket_page.html", content)
 
 def product_page(request):
     return render(request, "products/product_page.html")
