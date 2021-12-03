@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.db.models import Sum
 
 from .models import Community, Product
 
@@ -15,14 +16,23 @@ def create_community(request):
 def pending_requests(request):
     return render(request, "communities/pending_requests.html")
 
-def community_page(request, community_name):
-    return render(request, "communities/community_page.html")
+def community_page(request, community_id):
+    content = {
+        "community": Community.objects.filter(id=community_id)[0],
+        "products": Product.objects.filter(community_id=community_id)
+    }
+    return render(request, "communities/community_page.html", content)
 
 def add_product(request):
     return render(request, "products/add_product.html")
 
 def basket_page(request):
-    return render(request, "products/basket_page.html")
+    content = {
+        "products": Product.objects.all(),
+        "subtotal": Product.objects.aggregate(subtotal=Sum('price'))['subtotal'],
+        "total": Product.objects.aggregate(total=Sum('price'))['total']
+    }
+    return render(request, "products/basket_page.html", content)
 
 def product_page(request):
     return render(request, "products/product_page.html")
