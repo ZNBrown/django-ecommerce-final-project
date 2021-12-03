@@ -15,8 +15,12 @@ def create_community(request):
 def pending_requests(request):
     return render(request, "communities/pending_requests.html")
 
-def community_page(request, community_name):
-    return render(request, "communities/community_page.html")
+def community_page(request, community_id):
+    content = {
+        "community": Community.objects.filter(id=community_id)[0],
+        "products": Product.objects.filter(community_id=community_id)
+    }
+    return render(request, "communities/community_page.html", content)
 
 def add_product(request):
     return render(request, "products/add_product.html")
