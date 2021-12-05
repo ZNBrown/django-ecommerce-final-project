@@ -25,3 +25,6 @@ urlpatterns = [
     path('signup/', member_views.signup, name='signup'),
     path('login/', auth_views.LoginView.as_view(template_name='members/login.html'), name='login'),
 ]
+
+handler404 = 'communities.views.not_found_404'
+handler500 = 'communities.views.server_error_500'

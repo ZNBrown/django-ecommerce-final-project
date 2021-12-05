@@ -47,3 +47,10 @@ def basket_page(request):
 def product_page(request):
     return render(request, "products/product_page.html")
 
+def not_found_404(request, exception):
+    data = {'err': exception}
+    return render(request, 'communities/404.html', data)
+
+def server_error_500(request):
+    return render(request, 'communities/500.html')
+
