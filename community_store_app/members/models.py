@@ -9,6 +9,7 @@ ROLE_CHOICES =(
 
 class Member(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+    USERNAME_FIELD = 'email'
 
 #TODO: change user model to deal with emails for logging in primarily
 #or at least return email right
