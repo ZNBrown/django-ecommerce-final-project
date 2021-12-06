@@ -13,7 +13,7 @@
                     <span>Sold by {{product.user_id}}</span>
                 </div>
                 <div>
-                    <a href="">
+                    <a href="#">
                         <h5>{{product.title}}</h5>
                     </a>
                     <p>{{product.description}}</p>
@@ -25,4 +25,5 @@
         {% endfor %}
     </section>
 </div>
+<button type="submit"><a href="{% url 'add-product' community.id %}">+ Add Product</a></button>
 {% endblock content %}

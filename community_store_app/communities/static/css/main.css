@@ -1,5 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Raleway&display=swap');
 
+:root {
+    --black: #000000;
+    --white: #FFFFFF;
+    --grey: #C4C4C4;
+    --blue: #4682B4;
+}
+
 * {
     font-family: 'Raleway', sans-serif !important;
 }
@@ -24,4 +31,9 @@
 
 main {
     padding-top: 10vh;
+}
+
+/* My Communities Page */
+.badge {
+    color: var(--black);
 }

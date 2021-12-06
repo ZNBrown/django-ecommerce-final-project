@@ -1,25 +1,37 @@
 from django.db import models
-from django.contrib.auth.models import User
-from communities.models import Community
+from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.base_user import BaseUserManager
+from django.utils.translation import ugettext_lazy as _
 
-ROLE_CHOICES =(
-    ("Admin","admin"),
-    ("Member", "member")
-)
+class CustomUserManager(BaseUserManager):
+    def create_user(self, email, password, **extra_fields):
+        if not email:
+            raise ValueError(_('The Email must be set'))
+        email = self.normalize_email(email)
+        user = self.model(email=email, **extra_fields)
+        user.set_password(password)
+        user.save()
+        return user
 
-class Member(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    def create_superuser(self, email, password, **extra_fields):
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
+        extra_fields.setdefault('is_active', True)
+
+        if extra_fields.get('is_staff') is not True:
+            raise ValueError(_('Superuser must have is_staff=True.'))
+        if extra_fields.get('is_superuser') is not True:
+            raise ValueError(_('Superuser must have is_superuser=True.'))
+        return self.create_user(email, password, **extra_fields)
+
+class Member(AbstractUser):
+    username = None
+    email = models.EmailField(_('email address'), unique=True)
     USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = []
+    objects = CustomUserManager()
 
 #TODO: change user model to deal with emails for logging in primarily
 #or at least return email right
     def __str__(self):
-        return f'{self.user.email}'
-
-class Membership(models.Model):
-    user_id = models.ForeignKey(Member, on_delete=models.SET_NULL, null=True)
-    community_id = models.ForeignKey(Community, on_delete=models.SET_NULL, null=True)
-    member_role = models.CharField(max_length=50, choices=ROLE_CHOICES)
-
-    def __str__(self):
-        return f'{self.user_id.user.email}'
+        return f'{self.email}'

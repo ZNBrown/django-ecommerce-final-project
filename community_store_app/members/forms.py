@@ -1,5 +1,6 @@
 from django import forms
-from .models import Member, Membership
+from .models import Member
+from communities.models import Membership
 from django.contrib.auth.forms import UserCreationForm
 
 class SignUpForm(UserCreationForm):

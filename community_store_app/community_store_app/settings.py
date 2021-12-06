@@ -66,6 +66,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.media', #this line allows us to reference the MEDIA_URL variable in template directories
             ],
         },
     },
@@ -136,4 +137,11 @@ STATICFILES_DIRS = (
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# Specifying the path to the media directory so that Django knows where it is located
+MEDIA_ROOT= os.path.join(BASE_DIR, 'media/')
+# MEDIA_URL is for scripts or various files in templates, so that when we reference MEDIA_URL, the script knows where
+MEDIA_URL= "/media/"
+
 django_heroku.settings(locals())
+
+AUTH_USER_MODEL = "members.Member"

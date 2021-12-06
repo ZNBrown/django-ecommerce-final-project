@@ -1,26 +1,24 @@
-{% extends "communities/base.html" %}
-
-{% block content %}
+{% extends "communities/base.html" %} {% block content %}
 <h4>Your basket</h4>
 
 <ul class="list-group">
-    {% for product in products %}
-    <li class="list-group-item d-flex justify-content-between">
-        <div>
-            <img src={{product.image}} alt="" />
-            <h6>{{product.title}}</h6>
-            <small>{{product.description}}</small>
-        </div>
-        <span>£{{product.price}}</span>
-    </li>
-    {% endfor %}
-    <li class="list-group-item d-flex justify-content-between">
-        <span>Subtotal (GBP)</span>
-        <strong>{{subtotal}}</strong>
-    </li>
-    <li class="list-group-item d-flex justify-content-between">
-        <span>Total (GBP)</span>
-        <strong>{{total}}</strong>
-    </li>
+  {% for product in products %}
+  <li class="list-group-item d-flex justify-content-between">
+    <div>
+      <img src="../../../media/{{product.image}}" alt="" />
+      <h6>{{product.title}}</h6>
+      <small>{{product.description}}</small>
+    </div>
+    <span>£{{product.price}}</span>
+  </li>
+  {% endfor %}
+  <li class="list-group-item d-flex justify-content-between">
+    <span>Subtotal (GBP)</span>
+    <strong>£{{subtotal}}</strong>
+  </li>
+  <li class="list-group-item d-flex justify-content-between">
+    <span>Total (GBP)</span>
+    <strong>£{{total}}</strong>
+  </li>
 </ul>
 {% endblock content %}
