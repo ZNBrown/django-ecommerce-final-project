@@ -143,3 +143,5 @@ MEDIA_ROOT= os.path.join(BASE_DIR, 'media/')
 MEDIA_URL= "/media/"
 
 django_heroku.settings(locals())
+
+AUTH_USER_MODEL = "members.Member"
