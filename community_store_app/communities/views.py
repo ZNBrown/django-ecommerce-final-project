@@ -1,11 +1,16 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.contrib import messages
 from django.db.models import Sum
 
 from .models import Community, Product
 from members.forms import JoinCommunityForm
+from members.models import Member
 
 def my_communities(request):
-    return render(request, "communities/my_communities.html")
+    data = {
+        'communities': Community.objects.all()
+    }
+    return render(request, "communities/my_communities.html", data)
 
 def join_community(request):
     if request.method == 'POST':

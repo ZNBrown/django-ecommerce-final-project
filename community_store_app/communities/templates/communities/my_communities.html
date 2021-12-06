@@ -1,5 +1,21 @@
 {% extends "communities/base.html" %}
 
 {% block content %}
-<h1>Testing...</h1>
+<h4>My Communities</h4>
+
+<ul class="list-group">
+    {% for community in communities %}
+    <li class="list-group-item d-flex justify-content-between">
+        <div>
+            <h6>{{community.name}}</h6>
+            <span>{{community.description}}</span>
+            <br>
+            <small><em>Based in {{community.location}}</em>
+                <span class="badge badge-secondary">member.role</span>
+            </small>
+        </div>
+    </li>
+    {% endfor %}
+</ul>
+<button type="submit"><a href="{% url 'create-community' %}">+ Create Community</a></button>
 {% endblock content %}

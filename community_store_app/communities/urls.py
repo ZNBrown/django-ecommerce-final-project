@@ -6,8 +6,8 @@ urlpatterns = [
     path('my-communities/', views.my_communities, name="my-communities"),
     # Show community / Index products
     path('my-communities/<int:community_id>/', views.community_page, name="community-page"),
-    # Create community
-    path('my-communities/', views.create_community, name="create-community"),
+    # New community
+    path('my-communities/new', views.create_community, name="create-community"),
     # Create membership
     path('join-community/', views.join_community, name="join-community"),
     # Index
