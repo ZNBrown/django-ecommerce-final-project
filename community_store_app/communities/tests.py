@@ -20,20 +20,20 @@ class TestBasicViews(BaseTestCase):
         response = self.c.get(reverse('my-communities'))
         assert "communities/my_communities.html" in [t.name for t in response.templates]
     
-    def community_page(self):
-        response = self.c.get(reverse('community-page'))
-        assert "communities/community_page.html" in [t.name for t in response.templates]
+    # def community_page(self):
+    #     response = self.c.get(reverse('community-page'))
+    #     assert "communities/community_page.html" in [t.name for t in response.templates]
     
-    def create_community(self):
-        response = self.c.get(reverse('create-community'))
-        assert "communities/create-community.html" in [t.name for t in response.templates]
+    # def create_community(self):
+    #     response = self.c.get(reverse('create-community'))
+    #     assert "communities/create-community.html" in [t.name for t in response.templates]
 
-    def join_community(self):
-        response = self.c.get(reverse('join_community'))
-        assert "communities/join-community.html" in [t.name for t in response.templates]
+    # def join_community(self):
+    #     response = self.c.get(reverse('join_community'))
+    #     assert "communities/join-community.html" in [t.name for t in response.templates]
 
-    def pending_requests(self):
-        response = self.c.get(reverse('community-page'))
-        assert "communities/community_page.html" in [t.name for t in response.templates]
+    # def pending_requests(self):
+    #     response = self.c.get(reverse('community-page'))
+    #     assert "communities/community_page.html" in [t.name for t in response.templates]
     
 
