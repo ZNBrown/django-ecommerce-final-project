@@ -1,0 +1,13 @@
+{% extends "communities/base.html" %}
+
+{% block content %}
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Login">
+</form>
+
+<span>
+    <a href="{% url 'signup' %}">Not yet registered?</a>
+</span>
+{% endblock content %}

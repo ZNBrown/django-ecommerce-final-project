@@ -1,0 +1,10 @@
+{% extends "communities/base.html" %}
+
+{% block content %}
+<h4>Create Community</h4>
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Create Community">
+</form>
+{% endblock content %}
