@@ -20,4 +20,6 @@ urlpatterns = [
     # Create product
     path('my-communities/<int:community_id>/new/', views.add_product, name="add-product"),
     path('create-checkout-session/', CreateCheckoutSessionView.as_view(), name="create-checkout-session"),
+    path('cancel/', views.cancel, name='cancel'),
+    path('success/', views.success, name='success'),
 ]
