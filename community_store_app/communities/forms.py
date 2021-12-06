@@ -15,6 +15,7 @@ class AddProductForm(forms.ModelForm):
     description = forms.CharField(widget=forms.Textarea)
     price = forms.FloatField()
     image = forms.ImageField()
+    # sold_status
 
     class Meta:
         model = Product

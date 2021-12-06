@@ -70,8 +70,12 @@ def basket_page(request):
     }
     return render(request, "products/basket_page.html", data)
 
-def product_page(request):
-    return render(request, "products/product_page.html")
+def product_page(request, community_id, product_id):
+    data = {
+        "community": Community.objects.filter(id=community_id)[0],
+        "product": Product.objects.filter(id=product_id)[0]
+    }
+    return render(request, "products/product_page.html", data)
 
 def not_found_404(request, exception):
     data = {'err': exception}
