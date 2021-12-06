@@ -58,19 +58,17 @@ def community_page(request, community_id):
     }
     return render(request, "communities/community_page.html", data)
 
+# This needs fixing
 @login_required
 def add_product(request, community_id):
     if request.method == 'POST':
         form = AddProductForm(request.POST)
         if form.is_valid():
-            # product = form.save()
             form.user_id = request.user
-            # form.user_id = 'katieched98@hotmail.co.uk'
-            # form.community_id = 'Pathstow Village'
             form.save()
-            print(request)
             product_title = form.cleaned_data.get('product_title')
             messages.success(request, f'Your product, {product_title}, has been added')
+            messages.success(request, f'{request.user}')
             return redirect(reverse('community-page', kwargs={"community_id": community_id}))    
     else:
         form = AddProductForm()
