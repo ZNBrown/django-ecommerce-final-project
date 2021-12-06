@@ -16,13 +16,11 @@ class Product(models.Model):
     description = models.TextField()
     price = models.FloatField()
     sold_status = models.BooleanField()
-    image = models.ImageField()
+    # image = models.ImageField()
+    videofile=models.FileField(upload_to=f"images/", null=True, verbose_name="")
     user_id = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     community_id = models.ForeignKey(Community, on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
         return self.title
-
-
-    
 

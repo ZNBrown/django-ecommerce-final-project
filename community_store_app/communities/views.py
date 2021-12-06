@@ -37,6 +37,7 @@ def add_product(request):
     return render(request, "products/add_product.html")
 
 def basket_page(request):
+
     data = {
         "products": Product.objects.all(),
         "subtotal": Product.objects.aggregate(subtotal=Sum('price'))['subtotal'],
