@@ -7,11 +7,12 @@
     {% for community in communities %}
     <li class="list-group-item d-flex justify-content-between">
         <div>
-            <h6>{{community.name}}</h6>
+            <a href="{% url 'community-page' community.id %}">{{community.name}}</a>
+            <br>
             <span>{{community.description}}</span>
             <br>
             <small><em>Based in {{community.location}}</em>
-                <span class="badge badge-secondary">member.role</span>
+                <span class="badge badge-secondary">{{member.member_role}}</span>
             </small>
         </div>
     </li>

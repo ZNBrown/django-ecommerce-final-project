@@ -11,14 +11,15 @@ from django.views import View
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
 
-from .models import Community, Product
+from .models import Community, Product, Membership
 from .forms import CreateCommunityForm, AddProductForm
 from members.forms import JoinCommunityForm
 from members.models import Member
 
 def my_communities(request):
     data = {
-        'communities': Community.objects.all()
+        'communities': Community.objects.all(),
+        'member': Membership.objects.all()
     }
     return render(request, "communities/my_communities.html", data)
 
