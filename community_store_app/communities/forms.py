@@ -18,5 +18,4 @@ class AddProductForm(forms.ModelForm):
 
     class Meta:
         model = Product
-        fields = ['title', 'description', 'price', 'image', 'user_id', 'community_id']
-        widgets = {'user_id': forms.HiddenInput(), 'community_id': forms.HiddenInput()}
+        fields = ['title', 'description', 'price', 'image']

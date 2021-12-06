@@ -142,9 +142,14 @@ MEDIA_ROOT= os.path.join(BASE_DIR, 'media/')
 # MEDIA_URL is for scripts or various files in templates, so that when we reference MEDIA_URL, the script knows where
 MEDIA_URL= "/media/"
 
+
 #note: these might need to be strings ??
 STRIPE_PUBLIC_KEY = 'pk_test_51K3iqqHkKUv8ltDUO972oz2k6BWFYqqjE1URIbakFQwWMbBs2KwhqbwEb6xkMX1zjlW9jGL9XCLTIpvTKHQ6fq41001K1s7tHQ'
 STRIPE_SECRET_KEY = 'sk_test_51K3iqqHkKUv8ltDU1QBggzOVBgRmx9CMfrXf4CsLCRqGSFOFd2gk1fTO6E1p0hjejTsp4z5CEQutvz1saA9vkHxn00xtEWNYK1'
 URL='http://127.0.0.1:8000/'
 
+
 django_heroku.settings(locals())
+
+AUTH_USER_MODEL = "members.Member"
+
