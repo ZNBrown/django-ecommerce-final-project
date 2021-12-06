@@ -42,16 +42,16 @@
             <h6>{{product.title}}</h6>
             <small>{{product.description}}</small>
           </div>
-          <span>£{{product.price}}</span>
+          <span>£{{product.price|floatformat:2}}</span>
         </li>
         {% endfor %}
         <li class="list-group-item d-flex justify-content-between">
           <span>Subtotal (GBP)</span>
-          <strong>£{{subtotal}}</strong>
+          <strong>£{{subtotal|floatformat:2}}</strong>
         </li>
         <li class="list-group-item d-flex justify-content-between">
           <span>Total (GBP)</span>
-          <strong>£{{total}}</strong>
+          <strong>£{{total|floatformat:2}}</strong>
         </li>
       </ul>
 
