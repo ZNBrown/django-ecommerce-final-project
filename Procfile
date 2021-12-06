@@ -1,1 +1,1 @@
-web: gunicorn community_store_app.wsgi.py --log-file -
+web: gunicorn community_store_app.wsgi --log-file -
