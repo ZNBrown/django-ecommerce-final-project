@@ -3,6 +3,13 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.db.models import Sum
 from django.urls import reverse
+import stripe
+from django.conf import settings
+from django.http import JsonResponse
+from django.views import View
+
+stripe.api_key = settings.STRIPE_SECRET_KEY
+
 
 from .models import Community, Product
 from .forms import CreateCommunityForm, AddProductForm
@@ -80,10 +87,35 @@ def product_page(request, community_id, product_id):
     }
     return render(request, "products/product_page.html", data)
 
+#note: dont know if i should be passing in Views 
+class CreateCheckoutSessionView(View):
+    def post(self, request, *args, **kwargs):
+        checkout_session = stripe.checkout.Session.create(
+            payment_method_types=['card'],
+            line_items=[
+                {
+                    'price_data': {
+                        'currency': 'gbp',
+                        'unit_amount': 20, #this is in pence
+                        'product_data': {
+                            'name': 'demo product one',
+                            # 'images': ['image urls here'], #need to be publically available
+                        }
+                    },
+                    'quantity': 1,
+                },
+            ],
+            mode='payment',
+            success_url=URL + '/success/',
+            cancel_url=URL + '/cancel/',
+        )
+        return JsonResponse({
+            'id': checkout_session.id
+        })
+
 def not_found_404(request, exception):
     data = {'err': exception}
     return render(request, 'communities/404.html', data)
 
 def server_error_500(request):
     return render(request, 'communities/500.html')
-
