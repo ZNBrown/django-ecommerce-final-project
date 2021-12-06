@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.db.models import Sum
 
 from .models import Community, Product
+from .forms import CreateCommunityForm
 from members.forms import JoinCommunityForm
 
 def my_communities(request):
@@ -21,7 +22,17 @@ def join_community(request):
     return render(request, 'communities/join_community.html', data)
 
 def create_community(request):
-    return render(request, "communities/create_community.html")
+    if request.method == 'POST':
+        form = CreateCommunityForm(request.POST)
+        if form.is_valid():
+            form.save()
+            comm_name = form.cleaned_data.get('comm_name')
+            messages.success(request, f'Your new community, {comm_name}, has been created')
+            return redirect('my-communities')
+    else:
+        form = CreateCommunityForm()
+    data = {'form': form}
+    return render(request, "communities/create_community.html", data)
 
 def pending_requests(request):
     return render(request, "communities/pending_requests.html")
