@@ -1,1 +1,10 @@
 {% extends "communities/base.html" %}
+
+{% block content %}
+<h4>Add Item</h4>
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Add item">
+</form>
+{% endblock content %}
