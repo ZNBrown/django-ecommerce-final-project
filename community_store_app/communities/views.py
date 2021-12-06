@@ -63,12 +63,17 @@ def add_product(request, community_id):
     if request.method == 'POST':
         form = AddProductForm(request.POST)
         if form.is_valid():
+            # product = form.save()
+            # product.user_id = request.user
+            form.user_id = 'katieched98@hotmail.co.uk'
+            form.community_id = 'Pathstow Village'
             form.save()
+            print(request)
             product_title = form.cleaned_data.get('product_title')
             messages.success(request, f'Your product, {product_title}, has been added')
             return redirect(reverse('community-page', kwargs={"community_id": community_id}))    
     else:
-        form = AddProductForm(initial={'user_id': request.user_id, 'community_id':request.community_id})
+        form = AddProductForm()
     data = {'form': form}
     return render(request, "products/add_product.html", data)
 
