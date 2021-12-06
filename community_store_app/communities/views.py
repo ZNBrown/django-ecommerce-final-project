@@ -1,9 +1,11 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.db.models import Sum
+from django.urls import reverse
 
 from .models import Community, Product
-from .forms import CreateCommunityForm
+from .forms import CreateCommunityForm, AddProductForm
 from members.forms import JoinCommunityForm
 from members.models import Member
 
@@ -49,8 +51,19 @@ def community_page(request, community_id):
     }
     return render(request, "communities/community_page.html", data)
 
+@login_required
 def add_product(request, community_id):
-    return render(request, "products/add_product.html")
+    if request.method == 'POST':
+        form = AddProductForm(request.POST)
+        if form.is_valid():
+            form.save()
+            product_title = form.cleaned_data.get('product_title')
+            messages.success(request, f'Your product, {product_title}, has been added')
+            return redirect(reverse('community-page', kwargs={"community_id": community_id}))    
+    else:
+        form = AddProductForm(initial={'user_id': request.user_id, 'community_id':request.community_id})
+    data = {'form': form}
+    return render(request, "products/add_product.html", data)
 
 def basket_page(request):
     data = {
