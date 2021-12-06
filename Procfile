@@ -1,1 +1,1 @@
-web: gunicorn community_store_app/community_store_app.wsgi --log-file -
+web: cd community_store_app && gunicorn community_store_app.wsgi --log-file -
