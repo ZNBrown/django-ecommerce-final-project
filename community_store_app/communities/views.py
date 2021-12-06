@@ -9,6 +9,7 @@ from django.http import JsonResponse
 from django.views import View
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
+url = settings.URL
 
 
 from .models import Community, Product, Membership
@@ -97,10 +98,11 @@ class CreateCheckoutSessionView(View):
         checkout_session = stripe.checkout.Session.create(
             payment_method_types=['card'],
             line_items=[
+                #note: need to add data for our actual products in here
                 {
                     'price_data': {
                         'currency': 'gbp',
-                        'unit_amount': 20, #this is in pence
+                        'unit_amount': 40, #this is in pence
                         'product_data': {
                             'name': 'demo product one',
                             # 'images': ['image urls here'], #need to be publically available
@@ -110,12 +112,18 @@ class CreateCheckoutSessionView(View):
                 },
             ],
             mode='payment',
-            success_url=URL + '/success/',
-            cancel_url=URL + '/cancel/',
+            success_url=(url + '/success/'),
+            cancel_url=(url + '/cancel/'),
         )
         return JsonResponse({
             'id': checkout_session.id
         })
+
+def success(request):
+    return(request, "products/success.html", data)
+
+def cancel(request):
+    return(request, "products/cancel.html", data)
 
 def not_found_404(request, exception):
     data = {'err': exception}
