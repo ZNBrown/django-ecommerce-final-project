@@ -64,9 +64,9 @@ def add_product(request, community_id):
         form = AddProductForm(request.POST)
         if form.is_valid():
             # product = form.save()
-            # product.user_id = request.user
-            form.user_id = 'katieched98@hotmail.co.uk'
-            form.community_id = 'Pathstow Village'
+            form.user_id = request.user
+            # form.user_id = 'katieched98@hotmail.co.uk'
+            # form.community_id = 'Pathstow Village'
             form.save()
             print(request)
             product_title = form.cleaned_data.get('product_title')
