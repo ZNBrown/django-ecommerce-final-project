@@ -15,7 +15,7 @@ class Product(models.Model):
     title = models.CharField(max_length=50)
     description = models.TextField()
     price = models.FloatField()
-    sold_status = models.BooleanField()
+    sold_status = models.BooleanField(default=False)
     image = models.ImageField()
     user_id = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     community_id = models.ForeignKey(Community, on_delete=models.SET_NULL, null=True)

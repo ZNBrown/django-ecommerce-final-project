@@ -14,9 +14,9 @@ class AddProductForm(forms.ModelForm):
     title = forms.CharField(max_length=50)
     description = forms.CharField(widget=forms.Textarea)
     price = forms.FloatField()
-    image = forms.ImageField()
-    # sold_status
+    image = forms.ImageField(required=False)
 
     class Meta:
         model = Product
-        fields = ['title', 'description', 'price', 'image']
+        fields = ['title', 'description', 'price', 'image', 'user_id', 'community_id']
+        widgets = {'user_id': forms.HiddenInput(), 'community_id': forms.HiddenInput()}
