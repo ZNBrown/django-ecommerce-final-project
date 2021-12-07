@@ -1,5 +1,5 @@
 from django.db import models
-from members.models import Member 
+from members.models import Member, Basket
 
 class Community(models.Model):
     name = models.CharField(max_length=50)
@@ -17,6 +17,7 @@ class Product(models.Model):
     sold_status = models.BooleanField(default=False)
     image = models.FileField(upload_to=f"images/", null=True, verbose_name="", blank=True)
     user_id = models.ForeignKey(Member, on_delete=models.SET_NULL, null=True)
+    basket_id = models.ForeignKey(Basket, on_delete=models.SET_NULL, null=True, blank=True)
     community_id = models.ForeignKey(Community, on_delete=models.SET_NULL, null=True)
 
     def __str__(self):

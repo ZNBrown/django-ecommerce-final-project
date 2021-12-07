@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.base_user import BaseUserManager
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, password, **extra_fields):
@@ -35,3 +35,8 @@ class Member(AbstractUser):
 #or at least return email right
     def __str__(self):
         return f'{self.email}'
+
+
+class Basket(models.Model):
+    user_id = models.OneToOneField(Member, on_delete=models.SET_NULL, null=True)
+    
