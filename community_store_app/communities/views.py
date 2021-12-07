@@ -12,14 +12,15 @@ stripe.api_key = settings.STRIPE_SECRET_KEY
 url = settings.URL
 
 
-from .models import Community, Product
+from .models import Community, Product, Membership
 from .forms import CreateCommunityForm, AddProductForm
 from members.forms import JoinCommunityForm
 from members.models import Member
 
 def my_communities(request):
     data = {
-        'communities': Community.objects.all()
+        'communities': Community.objects.all(),
+        'member': Membership.objects.all()
     }
     return render(request, "communities/my_communities.html", data)
 
@@ -59,22 +60,19 @@ def community_page(request, community_id):
     }
     return render(request, "communities/community_page.html", data)
 
+# This needs fixing
 @login_required
 def add_product(request, community_id):
     if request.method == 'POST':
         form = AddProductForm(request.POST)
         if form.is_valid():
-            # product = form.save()
-            # product.user_id = request.user
-            form.user_id = 'katieched98@hotmail.co.uk'
-            form.community_id = 'Pathstow Village'
             form.save()
-            print(request)
             product_title = form.cleaned_data.get('product_title')
             messages.success(request, f'Your product, {product_title}, has been added')
+            messages.success(request, f'{request.user}')
             return redirect(reverse('community-page', kwargs={"community_id": community_id}))    
     else:
-        form = AddProductForm()
+        form = AddProductForm(initial={'user_id': request.user, 'community_id': community_id})
     data = {'form': form}
     return render(request, "products/add_product.html", data)
 

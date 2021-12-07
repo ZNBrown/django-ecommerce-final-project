@@ -15,7 +15,7 @@ class Product(models.Model):
     description = models.TextField()
     price = models.FloatField()
     sold_status = models.BooleanField(default=False)
-    image = models.FileField(upload_to=f"images/", null=True, verbose_name="")
+    image = models.FileField(upload_to=f"images/", null=True, verbose_name="", blank=True)
     user_id = models.ForeignKey(Member, on_delete=models.SET_NULL, null=True)
     community_id = models.ForeignKey(Community, on_delete=models.SET_NULL, null=True)
 
