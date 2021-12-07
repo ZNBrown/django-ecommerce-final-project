@@ -48,25 +48,21 @@ def join_community(request):
 def create_community(request):
     if request.method == 'POST':
         create_form = CreateCommunityForm(request.POST)
-        # membership_form = AcceptRequest(request.POST)
         if create_form.is_valid():
-            create_form.save()
-            request.session["membership_form"] = request.POST.dict()
-            comm_name = create_form.cleaned_data.get('comm_name')
+            new_community = create_form.save()
+            post_data = request.POST.copy()
+            post_data.update({'community_id': new_community.id})
+            membership_form = AcceptRequest(post_data)
+            if membership_form.is_valid():
+                membership_form.save()
 
-            membership_form_data = request.session.pop('membership_form', {})
-            community = membership_form_data.get("community_id")
-            new_membership_form = AcceptRequest(initial={'user_id': request.user, 'community_id': community, 'member_role': "Admin"})
-            if new_membership_form.is_valid():
-                new_membership_form.save()
-            # membership_form = AcceptRequest(community_id=comm_name)
-            # if membership_form.is_valid():
-            #     membership_form.save()
-            messages.success(request, f'Your new community, {comm_name}, has been created')
-            return redirect('my-communities')
+                messages.success(request, f'Your new community, {new_community.name}, has been created')
+                return redirect('my-communities')
+            else:
+                print(membership_form.errors)
     else:
         create_form = CreateCommunityForm()
-        membership_form = AcceptRequest()
+        membership_form = AcceptRequest(initial={'user_id': request.user, 'member_role': 'Admin'})
     data = {
         'create_form': create_form,
         'membership_form': membership_form
