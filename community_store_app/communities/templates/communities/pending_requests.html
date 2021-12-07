@@ -1,1 +1,19 @@
 {% extends "communities/base.html" %}
+{% block content %}
+<h2>{{community}}</h2>
+<h4>Here are all the pending requests</h4>
+<div class="container">
+    <section class="text-center mb-4">
+        {% for join_request in join_requests %}
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card">
+                <span>{{join_request.user_id}}</span>
+                <p>{{join_request.reason}}</p>
+                <button type="submit"><a href="#">Accept</a></button>
+                <button type="submit"><a href="#">Decline</a></button>
+            </div>
+        </div>
+        {% endfor %}
+    </section>
+</div>
+{% endblock content %}

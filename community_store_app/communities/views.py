@@ -12,15 +12,16 @@ stripe.api_key = settings.STRIPE_SECRET_KEY
 url = settings.URL
 
 
-from .models import Community, Product, Membership
+from .models import Community, Product, Membership, Request
 from .forms import CreateCommunityForm, AddProductForm
 from members.forms import JoinCommunityForm
 from members.models import Member
 
+@login_required
 def my_communities(request):
     data = {
-        'communities': Community.objects.all(),
-        'member': Membership.objects.all()
+        'member': Membership.objects.filter(user_id=request.user),
+        'communities': Community.objects.filter(membership__user_id=request.user)
     }
     return render(request, "communities/my_communities.html", data)
 
@@ -33,7 +34,7 @@ def join_community(request):
             messages.success(request, f'Waiting for approval from {comm_name}')
             return redirect('my-communities')
     else:
-        form = JoinCommunityForm()
+        form = JoinCommunityForm(initial={'user_id': request.user})
     data = {'form': form}
     return render(request, 'communities/join_community.html', data)
 
@@ -46,12 +47,15 @@ def create_community(request):
             messages.success(request, f'Your new community, {comm_name}, has been created')
             return redirect('my-communities')
     else:
-        form = CreateCommunityForm()
+        form = CreateCommunityForm(initial={'member_role': "Admin"})
     data = {'form': form}
     return render(request, "communities/create_community.html", data)
 
-def pending_requests(request):
-    return render(request, "communities/pending_requests.html")
+def pending_requests(request, community_id):
+    data = {
+        'join_requests': Request.objects.filter(community_id=community_id)
+    }
+    return render(request, "communities/pending_requests.html", data)
 
 def community_page(request, community_id):
     data = {
@@ -60,7 +64,6 @@ def community_page(request, community_id):
     }
     return render(request, "communities/community_page.html", data)
 
-# This needs fixing
 @login_required
 def add_product(request, community_id):
     if request.method == 'POST':

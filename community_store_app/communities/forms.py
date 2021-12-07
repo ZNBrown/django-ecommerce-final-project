@@ -1,5 +1,5 @@
 from django import forms
-from .models import Community, Product
+from .models import Community, Product, Membership
 
 class CreateCommunityForm(forms.ModelForm):
     class Meta:
