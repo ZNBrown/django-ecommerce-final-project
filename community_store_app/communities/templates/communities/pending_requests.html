@@ -11,12 +11,14 @@
                 <p>{{join_request.reason}}</p>
                 <form method="POST">
                     {% csrf_token %}
-                    {{ form.as_p }}
+                    {{ join_request.form.as_p }}
+                    <input type="hidden" name="type" value="POST">
                     <input type="submit" value="Accept">
                 </form>
-                <form method="DELETE">
+                <form method="POST">
                     {% csrf_token %}
-                    {{ form.as_p }}
+                    {{ join_request.form.as_p }}
+                    <input type="hidden" name="type" value="DELETE">
                     <input type="submit" value="Decline">
                 </form>
             </div>

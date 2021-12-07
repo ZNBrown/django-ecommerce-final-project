@@ -20,10 +20,14 @@ from members.models import Member
 
 @login_required
 def my_communities(request):
+    communities = Community.objects.filter(membership__user_id=request.user)
+    for community in communities:
+        community.member = Membership.objects.filter(user_id=request.user, community_id=community.id)[0]
+
     data = {
-        'members': Membership.objects.filter(user_id=request.user),
-        'communities': Community.objects.filter(membership__user_id=request.user)
+        'communities': communities
     }
+
     return render(request, "communities/my_communities.html", data)
 
 @login_required
@@ -44,25 +48,21 @@ def join_community(request):
 def create_community(request):
     if request.method == 'POST':
         create_form = CreateCommunityForm(request.POST)
-        # membership_form = AcceptRequest(request.POST)
         if create_form.is_valid():
-            create_form.save()
-            request.session["membership_form"] = request.POST.dict()
-            comm_name = create_form.cleaned_data.get('comm_name')
+            new_community = create_form.save()
+            post_data = request.POST.copy()
+            post_data.update({'community_id': new_community.id})
+            membership_form = AcceptRequest(post_data)
+            if membership_form.is_valid():
+                membership_form.save()
 
-            membership_form_data = request.session.pop('membership_form', {})
-            community = membership_form_data.get("community_id")
-            new_membership_form = AcceptRequest(initial={'user_id': request.user, 'community_id': community, 'member_role': "Admin"})
-            if new_membership_form.is_valid():
-                new_membership_form.save()
-            # membership_form = AcceptRequest(community_id=comm_name)
-            # if membership_form.is_valid():
-            #     membership_form.save()
-            messages.success(request, f'Your new community, {comm_name}, has been created')
-            return redirect('my-communities')
+                messages.success(request, f'Your new community, {new_community.name}, has been created')
+                return redirect('my-communities')
+            else:
+                print(membership_form.errors)
     else:
         create_form = CreateCommunityForm()
-        membership_form = AcceptRequest()
+        membership_form = AcceptRequest(initial={'user_id': request.user, 'member_role': 'Admin'})
     data = {
         'create_form': create_form,
         'membership_form': membership_form
@@ -71,24 +71,30 @@ def create_community(request):
 
 @login_required
 def pending_requests(request, community_id):
-    if request.method == 'POST':
-        form = AcceptRequest(request.POST)
-        if form.is_valid():
-            form.save()
-            user_id = form.cleaned_data.get('user_id')
-            messages.success(request, f'New member added to the community')
-            return redirect('pending-requests', community_id=community_id)
-    elif request.method == 'DELETE':
-        # Need to find Request ID
-        Request.objects.filter(id='test record').delete()
-    else:
-        # User id needs to be fixed
-        form = AcceptRequest(initial={'user_id': request.user, 'community_id': community_id, 'member_role': 'Member'})
+    if request.method == "POST":
+        if request.POST['type'] == 'POST':
+            form = AcceptRequest(request.POST)
+            if form.is_valid():
+                form.save()
+                messages.success(request, f'New member added to the community')
+                Request.objects.filter(community_id=community_id, user_id=form.cleaned_data['user_id']).delete()
 
-    data = {
-        'join_requests': Request.objects.filter(community_id=community_id),
-        'form': form
-    }
+        elif request.POST['type'] == 'DELETE':
+            form = AcceptRequest(request.POST)
+            if form.is_valid():
+                Request.objects.filter(community_id=community_id, user_id=form.cleaned_data['user_id']).delete()
+            
+        return redirect('pending-requests', community_id=community_id)
+
+    join_requests = Request.objects.filter(community_id=community_id)
+    for join_request in join_requests:
+        join_request.form = AcceptRequest(initial={
+            'user_id': join_request.user_id,
+            'community_id': join_request.community_id,
+            'member_role': 'Member',
+            'request_id': join_request.id
+        })
+    data = {'join_requests': join_requests}
     return render(request, "communities/pending_requests.html", data)
 
 @login_required
