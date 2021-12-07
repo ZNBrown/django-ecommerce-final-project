@@ -12,19 +12,10 @@
             <span>{{community.description}}</span>
             <br>
             <small><em>Based in {{community.location}}</em>
-                {% for member in members %}
-                <!-- <span class="badge badge-secondary">{{member.community_id}}</span>
-                                <span class="badge badge-secondary">{{community.name}}</span>
-                                <span class="badge badge-secondary">{{member.member_role}}</span> -->
-                    {% if community.name == member.community_id %}
-                        <span class="badge badge-secondary">{{member.member_role}}</span>
-                    {% else %}
-                        <span></span>
-                    {% endif %}
-                    {% if member.member_role == "Admin" %}
-                        <button type="submit"><a href="{% url 'pending-requests' community.id %}">Pending Requests</a></button>
-                    {% endif %}
-                {% endfor %}
+                <span class="badge badge-secondary">{{community.member.member_role}}</span>
+                {% if community.member.member_role == "Admin" %}
+                    <button type="submit"><a href="{% url 'pending-requests' community.id %}">Pending Requests</a></button>
+                {% endif %}
             </small>
         </div>
     </li>

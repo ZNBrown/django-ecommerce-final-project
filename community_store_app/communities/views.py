@@ -20,10 +20,14 @@ from members.models import Member
 
 @login_required
 def my_communities(request):
+    communities = Community.objects.filter(membership__user_id=request.user)
+    for community in communities:
+        community.member = Membership.objects.filter(user_id=request.user, community_id=community.id)[0]
+
     data = {
-        'members': Membership.objects.filter(user_id=request.user),
-        'communities': Community.objects.filter(membership__user_id=request.user)
+        'communities': communities
     }
+
     return render(request, "communities/my_communities.html", data)
 
 @login_required
