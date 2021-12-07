@@ -1,6 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.contrib import messages
+from django.contrib.auth import logout
 from django.db.models import Sum
 from django.urls import reverse
 import stripe
@@ -25,6 +26,7 @@ def my_communities(request):
     }
     return render(request, "communities/my_communities.html", data)
 
+@login_required
 def join_community(request):
     if request.method == 'POST':
         form = JoinCommunityForm(request.POST)
@@ -38,6 +40,7 @@ def join_community(request):
     data = {'form': form}
     return render(request, 'communities/join_community.html', data)
 
+@login_required
 def create_community(request):
     if request.method == 'POST':
         form = CreateCommunityForm(request.POST)
@@ -51,6 +54,7 @@ def create_community(request):
     data = {'form': form}
     return render(request, "communities/create_community.html", data)
 
+@login_required
 def pending_requests(request, community_id):
     if request.method == 'POST':
         form = AcceptRequest(request.POST)
@@ -72,6 +76,7 @@ def pending_requests(request, community_id):
     }
     return render(request, "communities/pending_requests.html", data)
 
+@login_required
 def community_page(request, community_id):
     data = {
         "community": Community.objects.filter(id=community_id)[0],
@@ -94,6 +99,7 @@ def add_product(request, community_id):
     data = {'form': form}
     return render(request, "products/add_product.html", data)
 
+@login_required
 def basket_page(request):
     data = {
         "products": Product.objects.all(),
@@ -102,12 +108,18 @@ def basket_page(request):
     }
     return render(request, "products/basket_page.html", data)
 
+@login_required
 def product_page(request, community_id, product_id):
     data = {
         "community": Community.objects.filter(id=community_id)[0],
         "product": Product.objects.filter(id=product_id)[0]
     }
     return render(request, "products/product_page.html", data)
+
+@login_required
+def logout_view(request):
+    logout(request)
+    return redirect('login')
 
 #note: dont know if i should be passing in Views 
 class CreateCheckoutSessionView(View):
@@ -146,5 +158,8 @@ def not_found_404(request, exception):
     data = {'err': exception}
     return render(request, 'communities/404.html', data)
 
+def method_not_allowed_405(request):
+    return render(request, 'communities/405.html')
+    
 def server_error_500(request):
     return render(request, 'communities/500.html')
