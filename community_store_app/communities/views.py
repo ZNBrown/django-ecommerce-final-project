@@ -114,8 +114,8 @@ class CreateCheckoutSessionView(View):
                 },
             ],
             mode='payment',
-            success_url=(url + '/success/'),
-            cancel_url=(url + '/cancel/'),
+            success_url=("http://localhost:8000/communities/success/"),
+            cancel_url=("http://localhost:8000/communities/cancel/"),
         )
         return JsonResponse({
             'id': checkout_session.id
