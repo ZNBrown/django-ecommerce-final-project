@@ -75,24 +75,30 @@ def create_community(request):
 
 @login_required
 def pending_requests(request, community_id):
-    if request.method == 'POST':
-        form = AcceptRequest(request.POST)
-        if form.is_valid():
-            form.save()
-            user_id = form.cleaned_data.get('user_id')
-            messages.success(request, f'New member added to the community')
-            return redirect('pending-requests', community_id=community_id)
-    elif request.method == 'DELETE':
-        # Need to find Request ID
-        Request.objects.filter(id='test record').delete()
-    else:
-        # User id needs to be fixed
-        form = AcceptRequest(initial={'user_id': request.user, 'community_id': community_id, 'member_role': 'Member'})
+    if request.method == "POST":
+        if request.POST['type'] == 'POST':
+            form = AcceptRequest(request.POST)
+            if form.is_valid():
+                form.save()
+                messages.success(request, f'New member added to the community')
+                Request.objects.filter(community_id=community_id, user_id=form.cleaned_data['user_id']).delete()
 
-    data = {
-        'join_requests': Request.objects.filter(community_id=community_id),
-        'form': form
-    }
+        elif request.POST['type'] == 'DELETE':
+            form = AcceptRequest(request.POST)
+            if form.is_valid():
+                Request.objects.filter(community_id=community_id, user_id=form.cleaned_data['user_id']).delete()
+            
+        return redirect('pending-requests', community_id=community_id)
+
+    join_requests = Request.objects.filter(community_id=community_id)
+    for join_request in join_requests:
+        join_request.form = AcceptRequest(initial={
+            'user_id': join_request.user_id,
+            'community_id': join_request.community_id,
+            'member_role': 'Member',
+            'request_id': join_request.id
+        })
+    data = {'join_requests': join_requests}
     return render(request, "communities/pending_requests.html", data)
 
 @login_required
