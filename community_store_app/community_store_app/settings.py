@@ -23,6 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-$a&_=q_(d8lk(@r*jaw!==#v!kb%bgv-xnqyr88$q8ovo!x@uf'
 
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -165,8 +166,6 @@ PAYPAL_RECEIVER_EMAIL = 'zbchazach@gmail.com'
 PAYPAL_TEST = True
 
 #note: these might need to be strings ??
-STRIPE_PUBLIC_KEY = 'pk_test_51K3iqqHkKUv8ltDUO972oz2k6BWFYqqjE1URIbakFQwWMbBs2KwhqbwEb6xkMX1zjlW9jGL9XCLTIpvTKHQ6fq41001K1s7tHQ'
-STRIPE_SECRET_KEY = 'sk_test_51K3iqqHkKUv8ltDU1QBggzOVBgRmx9CMfrXf4CsLCRqGSFOFd2gk1fTO6E1p0hjejTsp4z5CEQutvz1saA9vkHxn00xtEWNYK1'
 URL='http://127.0.0.1:8000/'
 
 

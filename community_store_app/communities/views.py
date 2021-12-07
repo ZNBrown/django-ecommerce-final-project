@@ -3,12 +3,11 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.db.models import Sum
 from django.urls import reverse
-import stripe
+import requests
 from django.conf import settings
 from django.http import JsonResponse
 from django.views import View
 
-stripe.api_key = settings.STRIPE_SECRET_KEY
 url = settings.URL
 
 
@@ -76,13 +75,43 @@ def add_product(request, community_id):
     data = {'form': form}
     return render(request, "products/add_product.html", data)
 
-def basket_page(request):
-    client_id = "test"
+
+#sb-r9gkz8895206@personal.example.com
+#DI/xD6cz
+def basket_page(request):    
+    headers = {
+        'Accept': 'application/json',
+        'Accept-Language': 'en_US',
+    }
+    data = {
+    'grant_type': 'client_credentials'
+    }
+    response = requests.post('https://api-m.sandbox.paypal.com/v1/oauth2/token', headers=headers, data=data, 
+    auth=('ATKw9NTm8MtV4AFn8bao8yyy_BvpBtMYpAXQQfG_gCe0q9RAbr8G605RyOxUorG9ozu5me2c2FAnblie', 'EEIRKOZ40ehETBuVQ2BQGsiKqmsDmTHNTVI8r9H5Fh86doKwXkpvABUdcxH4pXYPHEaMdx2EyV-O5cxM'))
+    real_access_token = (response.json()['access_token'])
+    # personal_client_id = "ATKw9NTm8MtV4AFn8bao8yyy_BvpBtMYpAXQQfG_gCe0q9RAbr8G605RyOxUorG9ozu5me2c2FAnblie"
+
+    headers = {
+    'Content-Type': 'application/json',
+    'Authorization': f'Bearer {real_access_token}',
+    }
+    data = '{\n    "tracking_id": "<Tracking-ID>",\n    "operations": [\n      {\n        "operation": "API_INTEGRATION",\n        "api_integration_preference": {\n          "rest_api_integration": {\n            "integration_method": "PAYPAL",\n            "integration_type": "THIRD_PARTY",\n            "third_party_details": {\n              "features": [\n                "PAYMENT",\n                "REFUND"\n             ]\n            }\n          }\n        }\n      }\n    ],\n    "products": [\n      "EXPRESS_CHECKOUT"\n    ],\n    "legal_consents": [\n      {\n        "type": "SHARE_DATA_CONSENT",\n        "granted": true\n      }\n    ]\n}'
+    response = requests.post('https://api-m.sandbox.paypal.com/v2/customer/partner-referrals', headers=headers, data=data)
+    action_url = response.json()['links'][1]['href']
+    self_url = response.json()['links'][0]['href']
+    print(action_url)
+
+
+
+
+
     data = {
         "products": Product.objects.all(),
         "subtotal": Product.objects.aggregate(subtotal=Sum('price'))['subtotal'],
         "total": Product.objects.aggregate(total=Sum('price'))['total'],
-        "script_source": f'https://www.paypal.com/sdk/js?client-id={client_id}&currency=GBP'
+        "action_url" : action_url,
+        "onboarding_tag" : f'<a data-paypal-button="true" href="{action_url}&displayMode=minibrowser" target="PPFrame">Sign up for PayPal</a>',
+        "script_source": f'https://www.paypal.com/sdk/js?client-id=ATKw9NTm8MtV4AFn8bao8yyy_BvpBtMYpAXQQfG_gCe0q9RAbr8G605RyOxUorG9ozu5me2c2FAnblie&currency=GBP'
     }
     return render(request, "products/basket_page.html", data)
 
