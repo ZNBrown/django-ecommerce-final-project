@@ -23,8 +23,8 @@ class Product(models.Model):
         return self.title
 
 ROLE_CHOICES =(
-    ("Admin","admin"),
-    ("Member", "member")
+    ("Admin","Admin"),
+    ("Member", "Member")
 )
 
 class Membership(models.Model):

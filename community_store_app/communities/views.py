@@ -13,7 +13,7 @@ url = settings.URL
 
 
 from .models import Community, Product, Membership, Request
-from .forms import CreateCommunityForm, AddProductForm
+from .forms import CreateCommunityForm, AddProductForm, AcceptRequest
 from members.forms import JoinCommunityForm
 from members.models import Member
 
@@ -52,8 +52,23 @@ def create_community(request):
     return render(request, "communities/create_community.html", data)
 
 def pending_requests(request, community_id):
+    if request.method == 'POST':
+        form = AcceptRequest(request.POST)
+        if form.is_valid():
+            form.save()
+            user_id = form.cleaned_data.get('user_id')
+            messages.success(request, f'New member added to the community')
+            return redirect('pending-requests', community_id=community_id)
+    elif request.method == 'DELETE':
+        # Need to find Request ID
+        Request.objects.filter(id='test record').delete()
+    else:
+        # User id needs to be fixed
+        form = AcceptRequest(initial={'user_id': request.user, 'community_id': community_id, 'member_role': 'Member'})
+
     data = {
-        'join_requests': Request.objects.filter(community_id=community_id)
+        'join_requests': Request.objects.filter(community_id=community_id),
+        'form': form
     }
     return render(request, "communities/pending_requests.html", data)
 
