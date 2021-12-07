@@ -22,4 +22,5 @@ urlpatterns = [
     path('create-checkout-session/', CreateCheckoutSessionView.as_view(), name="create-checkout-session"),
     path('cancel/', views.cancel, name='cancel'),
     path('success/', views.success, name='success'),
+    path('stripe/callback', views.callback, name='callback'),
 ]
