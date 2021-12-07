@@ -10,6 +10,7 @@ gunicorn = "*"
 django-heroku = "*"
 coverage = "*"
 stripe = "*"
+django-cors-headers = "*"
 
 [dev-packages]
 

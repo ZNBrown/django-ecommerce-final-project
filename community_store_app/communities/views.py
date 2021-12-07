@@ -77,10 +77,12 @@ def add_product(request, community_id):
     return render(request, "products/add_product.html", data)
 
 def basket_page(request):
+    client_id = "test"
     data = {
         "products": Product.objects.all(),
         "subtotal": Product.objects.aggregate(subtotal=Sum('price'))['subtotal'],
-        "total": Product.objects.aggregate(total=Sum('price'))['total']
+        "total": Product.objects.aggregate(total=Sum('price'))['total'],
+        "script_source": f'https://www.paypal.com/sdk/js?client-id={client_id}&currency=GBP'
     }
     return render(request, "products/basket_page.html", data)
 

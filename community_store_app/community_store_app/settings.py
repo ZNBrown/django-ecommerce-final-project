@@ -33,6 +33,7 @@ ALLOWED_HOSTS = []
 # <appname>.apps.<AppConfigClass>
 INSTALLED_APPS = [
     'members.apps.MembersConfig',
+    "corsheaders",
     'communities.apps.CommunitiesConfig',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -43,15 +44,32 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    "corsheaders.middleware.CorsPostCsrfMiddleware",
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+CORS_ALLOWED_ORIGINS = [
+    "https://www.sandbox.paypal.com",
+    "https://c.paypal.com",
+    "http://localhost:8080",
+    "http://127.0.0.1:9000",
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://www.sandbox.paypal.com",
+    "https://c.paypal.com",
+    "http://localhost:8080",
+    "http://127.0.0.1:9000",
+]
+
 
 ROOT_URLCONF = 'community_store_app.urls'
 
@@ -142,6 +160,9 @@ MEDIA_ROOT= os.path.join(BASE_DIR, 'media/')
 # MEDIA_URL is for scripts or various files in templates, so that when we reference MEDIA_URL, the script knows where
 MEDIA_URL= "/media/"
 
+PAYPAL_RECEIVER_EMAIL = 'zbchazach@gmail.com'
+
+PAYPAL_TEST = True
 
 #note: these might need to be strings ??
 STRIPE_PUBLIC_KEY = 'pk_test_51K3iqqHkKUv8ltDUO972oz2k6BWFYqqjE1URIbakFQwWMbBs2KwhqbwEb6xkMX1zjlW9jGL9XCLTIpvTKHQ6fq41001K1s7tHQ'
