@@ -152,6 +152,7 @@ STRIPE_CLIENT_ID = "ca_KjSd32vREt2KpiTUW3r2P0z6jYMhgrBu"
 
 URL='http://127.0.0.1:8000/'
 
+LOGIN_REDIRECT_URL='communities/my-communities/'
 
 django_heroku.settings(locals())
 
