@@ -79,6 +79,7 @@ def add_product(request, community_id):
 #sb-r9gkz8895206@personal.example.com
 #DI/xD6cz
 def basket_page(request):    
+    #PARTNER/OUR MARKET REQUEST TO GET OUR ACCESS TOKEN
     headers = {
         'Accept': 'application/json',
         'Accept-Language': 'en_US',
@@ -91,14 +92,19 @@ def basket_page(request):
     real_access_token = (response.json()['access_token'])
     # personal_client_id = "ATKw9NTm8MtV4AFn8bao8yyy_BvpBtMYpAXQQfG_gCe0q9RAbr8G605RyOxUorG9ozu5me2c2FAnblie"
 
+
+    #------------------------------------------------------
+    #REQUEST 2: PERSONAL REQUEST TO SETUP ONBOARDING LINK FOR SELLERS
     headers = {
     'Content-Type': 'application/json',
     'Authorization': f'Bearer {real_access_token}',
     }
-    data = '{\n    "tracking_id": "<Tracking-ID>",\n    "operations": [\n      {\n        "operation": "API_INTEGRATION",\n        "api_integration_preference": {\n          "rest_api_integration": {\n            "integration_method": "PAYPAL",\n            "integration_type": "THIRD_PARTY",\n            "third_party_details": {\n              "features": [\n                "PAYMENT",\n                "REFUND"\n             ]\n            }\n          }\n        }\n      }\n    ],\n    "products": [\n      "EXPRESS_CHECKOUT"\n    ],\n    "legal_consents": [\n      {\n        "type": "SHARE_DATA_CONSENT",\n        "granted": true\n      }\n    ]\n}'
+    data = '{  "partner_config_override": { "return_url": "https://testenterprises.com/merchantonboarded"},    "tracking_id": "<Tracking-ID>",    "operations": [      {        "operation": "API_INTEGRATION",        "api_integration_preference": {          "rest_api_integration": {            "integration_method": "PAYPAL",            "integration_type": "THIRD_PARTY",            "third_party_details": {              "features": [                "PAYMENT",                "REFUND"             ]            }          }        }      }    ],    "products": [      "EXPRESS_CHECKOUT"    ],    "legal_consents": [      {        "type": "SHARE_DATA_CONSENT",        "granted": true      }    ]}'
+  
     response = requests.post('https://api-m.sandbox.paypal.com/v2/customer/partner-referrals', headers=headers, data=data)
     action_url = response.json()['links'][1]['href']
     self_url = response.json()['links'][0]['href']
+    print(response.json())
     print(action_url)
 
 
