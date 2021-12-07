@@ -13,7 +13,7 @@ urlpatterns = [
     # Create membership
     path('join-community/', views.join_community, name="join-community"),
     # Index
-    path('my-communities/<str:community_name>/pending-requests/', views.pending_requests, name="pending-requests"),
+    path('my-communities/<int:community_id>/pending-requests/', views.pending_requests, name="pending-requests"),
     # Show product
     path('my-communities/<int:community_id>/<int:product_id>/', views.product_page, name="product"),
     path('basket/', views.basket_page, name="basket"),
