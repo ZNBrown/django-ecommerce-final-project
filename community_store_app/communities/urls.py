@@ -1,5 +1,7 @@
 from django.urls import path
 from . import views
+#note: not sure where to import this from
+from communities.views import CreateCheckoutSessionView
 
 urlpatterns = [
     # Index communities
@@ -16,5 +18,8 @@ urlpatterns = [
     path('my-communities/<int:community_id>/<int:product_id>/', views.product_page, name="product"),
     path('basket/', views.basket_page, name="basket"),
     # Create product
-    path('my-communities/<int:community_id>/new/', views.add_product, name="add-product")
+    path('my-communities/<int:community_id>/new/', views.add_product, name="add-product"),
+    path('create-checkout-session/', CreateCheckoutSessionView.as_view(), name="create-checkout-session"),
+    path('cancel/', views.cancel, name='cancel'),
+    path('success/', views.success, name='success'),
 ]

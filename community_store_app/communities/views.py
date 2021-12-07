@@ -3,15 +3,24 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.db.models import Sum
 from django.urls import reverse
+import stripe
+from django.conf import settings
+from django.http import JsonResponse
+from django.views import View
 
-from .models import Community, Product
+stripe.api_key = settings.STRIPE_SECRET_KEY
+url = settings.URL
+
+
+from .models import Community, Product, Membership
 from .forms import CreateCommunityForm, AddProductForm
 from members.forms import JoinCommunityForm
 from members.models import Member
 
 def my_communities(request):
     data = {
-        'communities': Community.objects.all()
+        'communities': Community.objects.all(),
+        'member': Membership.objects.all()
     }
     return render(request, "communities/my_communities.html", data)
 
@@ -51,22 +60,19 @@ def community_page(request, community_id):
     }
     return render(request, "communities/community_page.html", data)
 
+# This needs fixing
 @login_required
 def add_product(request, community_id):
     if request.method == 'POST':
         form = AddProductForm(request.POST)
         if form.is_valid():
-            # product = form.save()
-            # product.user_id = request.user
-            form.user_id = 'katieched98@hotmail.co.uk'
-            form.community_id = 'Pathstow Village'
             form.save()
-            print(request)
             product_title = form.cleaned_data.get('product_title')
             messages.success(request, f'Your product, {product_title}, has been added')
+            messages.success(request, f'{request.user}')
             return redirect(reverse('community-page', kwargs={"community_id": community_id}))    
     else:
-        form = AddProductForm()
+        form = AddProductForm(initial={'user_id': request.user, 'community_id': community_id})
     data = {'form': form}
     return render(request, "products/add_product.html", data)
 
@@ -85,10 +91,42 @@ def product_page(request, community_id, product_id):
     }
     return render(request, "products/product_page.html", data)
 
+#note: dont know if i should be passing in Views 
+class CreateCheckoutSessionView(View):
+    def post(self, request, *args, **kwargs):
+        checkout_session = stripe.checkout.Session.create(
+            payment_method_types=['card'],
+            line_items=[
+                #note: need to add data for our actual products in here
+                {
+                    'price_data': {
+                        'currency': 'gbp',
+                        'unit_amount': 40, #this is in pence
+                        'product_data': {
+                            'name': 'demo product one',
+                            # 'images': ['image urls here'], #need to be publically available
+                        }
+                    },
+                    'quantity': 1,
+                },
+            ],
+            mode='payment',
+            success_url=(url + '/success/'),
+            cancel_url=(url + '/cancel/'),
+        )
+        return JsonResponse({
+            'id': checkout_session.id
+        })
+
+def success(request):
+    return(request, "products/success.html", data)
+
+def cancel(request):
+    return(request, "products/cancel.html", data)
+
 def not_found_404(request, exception):
     data = {'err': exception}
     return render(request, 'communities/404.html', data)
 
 def server_error_500(request):
     return render(request, 'communities/500.html')
-
