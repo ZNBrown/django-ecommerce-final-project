@@ -21,7 +21,7 @@ from members.models import Member
 @login_required
 def my_communities(request):
     data = {
-        'member': Membership.objects.filter(user_id=request.user),
+        'members': Membership.objects.filter(user_id=request.user),
         'communities': Community.objects.filter(membership__user_id=request.user)
     }
     return render(request, "communities/my_communities.html", data)
@@ -43,15 +43,30 @@ def join_community(request):
 @login_required
 def create_community(request):
     if request.method == 'POST':
-        form = CreateCommunityForm(request.POST)
-        if form.is_valid():
-            form.save()
-            comm_name = form.cleaned_data.get('comm_name')
+        create_form = CreateCommunityForm(request.POST)
+        # membership_form = AcceptRequest(request.POST)
+        if create_form.is_valid():
+            create_form.save()
+            request.session["membership_form"] = request.POST.dict()
+            comm_name = create_form.cleaned_data.get('comm_name')
+
+            membership_form_data = request.session.pop('membership_form', {})
+            community = membership_form_data.get("community_id")
+            new_membership_form = AcceptRequest(initial={'user_id': request.user, 'community_id': community, 'member_role': "Admin"})
+            if new_membership_form.is_valid():
+                new_membership_form.save()
+            # membership_form = AcceptRequest(community_id=comm_name)
+            # if membership_form.is_valid():
+            #     membership_form.save()
             messages.success(request, f'Your new community, {comm_name}, has been created')
             return redirect('my-communities')
     else:
-        form = CreateCommunityForm(initial={'member_role': "Admin"})
-    data = {'form': form}
+        create_form = CreateCommunityForm()
+        membership_form = AcceptRequest()
+    data = {
+        'create_form': create_form,
+        'membership_form': membership_form
+        }
     return render(request, "communities/create_community.html", data)
 
 @login_required
