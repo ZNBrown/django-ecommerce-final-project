@@ -149,6 +149,8 @@ def add_product(request, community_id):
     print("----------------")
     action_url = response.json()['links'][1]['href']
     self_url = response.json()['links'][0]['href']
+    print(self_url)
+    requests.get(self_url)
 
     if request.method == 'POST':
         form = AddProductForm(request.POST)
@@ -160,11 +162,11 @@ def add_product(request, community_id):
             return redirect(reverse('community-page', kwargs={"community_id": community_id}))    
     else:
         form = AddProductForm(initial={'user_id': request.user, 'community_id': community_id})
-    data = {'form': form, 
-            "action_url" : action_url,
-            "seller_nonce" : seller_nonce,
-            "user" : request.user.id
-            }
+        data = {'form': form, 
+                "action_url" : action_url,
+                "seller_nonce" : seller_nonce,
+                "user" : request.user.id
+                }
     return render(request, "products/add_product.html", data)
 
 
@@ -183,8 +185,9 @@ def basket_page(request):
     response = requests.post('https://api-m.sandbox.paypal.com/v1/oauth2/token', data=data, auth=(request.user.sharedId, ''))
     print("----------")
     print(response)
+    print(response.json())
     print("----------")
-    access_token = response["access_token"]
+    access_token = response.json().body["access_token"]
 
     headers = {
     'Authorization': f'Bearer {access_token}',
