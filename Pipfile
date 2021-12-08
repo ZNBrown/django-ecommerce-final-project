@@ -12,6 +12,10 @@ coverage = "*"
 stripe = "*"
 django-cors-headers = "*"
 requests = "*"
+psycopg2-binary = "*"
+whitenoise = "*"
+dj-database-url = "*"
+psycopg2 = "*"
 
 [dev-packages]
 
