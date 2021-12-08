@@ -3,7 +3,7 @@
 {% block title %}New Community{% endblock title %}
 
 {% block content %}
-<h4>Create Community</h4>
+<h2>Create Community</h2>
 <form method="POST">
     {% csrf_token %}
     {{ create_form.as_p }}

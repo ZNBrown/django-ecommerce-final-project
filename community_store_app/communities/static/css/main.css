@@ -11,11 +11,11 @@
     font-family: 'Raleway', sans-serif !important;
 }
 
-.navbar .navbar-nav {
-    display: inline-block;
+/* .navbar .navbar-nav {
+     display: inline-block;
     float: none;
-    vertical-align: top;
-}
+    vertical-align: top; */
+
 
 .navbar .navbar-collapse {
     text-align: center;

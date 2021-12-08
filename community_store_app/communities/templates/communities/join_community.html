@@ -3,6 +3,7 @@
 {% block title %}Join Community{% endblock title %}
 
 {% block content %}
+<h2>Join Community</h2>
 <form method="POST">
     {% csrf_token %}
     {{ form.as_p }}
