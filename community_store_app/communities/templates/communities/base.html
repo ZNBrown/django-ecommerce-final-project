@@ -77,7 +77,11 @@
     </nav>
     <main>
       <div class="container py-5">
-        {% block content %}{% endblock content %}
+        <div class="row">
+          <div class="col-lg-8">
+            {% block content %}{% endblock content %}
+          </div>
+        </div>
       </div>
     </main>
   </body>

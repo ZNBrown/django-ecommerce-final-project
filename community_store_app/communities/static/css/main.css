@@ -37,3 +37,9 @@ main {
 .badge {
     color: var(--black);
 }
+
+form p input, form p textarea {
+    display: block;
+    width: 90%;
+}
+
