@@ -42,3 +42,8 @@ form p input, form p textarea {
     display: block;
     width: 90%;
 }
+
+.product-image img {
+    width:80%;
+    height: auto
+}
