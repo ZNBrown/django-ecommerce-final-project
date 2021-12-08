@@ -28,7 +28,6 @@ def my_communities(request):
     data = {
         'communities': communities
     }
-
     return render(request, "communities/my_communities.html", data)
 
 @login_required
@@ -119,6 +118,17 @@ def recieve_seller_info(request):
     user.save()
     response = HttpResponse("DONT COME HERE")
     return response
+
+@login_required
+def my_products(request):
+    products = Product.objects.filter(user_id=request.user)
+    for product in products:
+        product.community = Community.objects.filter(name=product.community_id)[0]
+
+    data = {
+        "products": products
+    }
+    return render(request, "products/my_products.html", data)
 
 
 @login_required

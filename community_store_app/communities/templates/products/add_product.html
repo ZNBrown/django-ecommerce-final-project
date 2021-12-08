@@ -1,4 +1,7 @@
 {% extends "communities/base.html" %}
+
+{% block title %}New Product{% endblock title %}
+
 {% block content %}
 {{ action_url | json_script:"action-url" }}
 {{ seller_nonce | json_script:"seller-nonce"}}
@@ -7,7 +10,7 @@
 {% csrf_token %}
 
 <h4>Add Product</h4>
-<form method="POST">
+<form method="POST" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="Add product">

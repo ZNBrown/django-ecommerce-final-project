@@ -8,6 +8,8 @@ urlpatterns = [
     path('my-communities/', views.my_communities, name="my-communities"),
     # Show community / Index products
     path('my-communities/<int:community_id>/', views.community_page, name="community-page"),
+    # Show own products
+    path('my-products/', views.my_products, name="my-products"),
     # New community
     path('my-communities/new/', views.create_community, name="create-community"),
     # Create membership

@@ -1,10 +1,12 @@
 {% extends "communities/base.html" %}
+{% block title %}{{product}}{% endblock title %}
+
 {% block content %}
 <h4>{{product}}</h4>
+<img src="../../../../media/{{product.image}}" alt="" />
 <div class="container">
     <div class="row">
         <div>
-            <img src={{product.image}} class="img-fluid" alt="">
         </div>
         <div>
             <div class="product-info">
