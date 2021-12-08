@@ -106,6 +106,20 @@ def basket_page(request):
     self_url = response.json()['links'][0]['href']
     print(response.json())
     print(action_url)
+    # print("----------------")
+    # print(request.user.seller_nonce)
+    # print("----------------")
+
+    #---------------------------------------------------------
+    #REQUEST 3: Build onboarding into software
+    headers = {
+        'Content-Type': 'application/json',
+        'Authorization': f'Bearer {real_access_token}',
+    }
+
+    data = '{    "operations": [      {        "operation": "API_INTEGRATION",        "api_integration_preference": {          "rest_api_integration": {            "integration_method": "PAYPAL",            "integration_type": "FIRST_PARTY",            "first_party_details": {              "features": [                "PAYMENT",                "REFUND"              ],              "seller_nonce": "<Seller-Nonce>"            }          }        }      }    ],    "products": [      "EXPRESS_CHECKOUT"    ],    "legal_consents": [      {        "type": "SHARE_DATA_CONSENT",        "granted": true      }    ]}'
+
+    response = requests.post('https://api-m.sandbox.paypal.com/v2/customer/partner-referrals', headers=headers, data=data)
 
 
 
