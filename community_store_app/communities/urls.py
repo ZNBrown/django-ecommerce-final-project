@@ -19,8 +19,6 @@ urlpatterns = [
     path('basket/', views.basket_page, name="basket"),
     # Create product
     path('my-communities/<int:community_id>/new/', views.add_product, name="add-product"),
-    path('create-checkout-session/', CreateCheckoutSessionView.as_view(), name="create-checkout-session"),
-    path('cancel/', views.cancel, name='cancel'),
-    path('success/', views.success, name='success'),
-    # path('stripe/callback', views.callback, name='callback'),
+    # Add paypal details in productpage
+    path('paypal/details', views.recieve_seller_info, name="seller-info"),
 ]

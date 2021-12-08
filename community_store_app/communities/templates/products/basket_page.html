@@ -25,8 +25,15 @@
 <!-- Set up a container element for the button -->
 <div id='paypal-button-container'></div>
 <!-- Include the PayPal JavaScript SDK -->
-<!-- <script src={{script_source}}></script> -->
-<script src='https://www.paypal.com/sdk/js?client-id=ATKw9NTm8MtV4AFn8bao8yyy_BvpBtMYpAXQQfG_gCe0q9RAbr8G605RyOxUorG9ozu5me2c2FAnblie&currency=GBP'></script>
+
+{{ client_id | json_script:"not_client_id" }}
+
+<script id="cool_script" src=''></script>
+<script>
+  const passed_src = JSON.parse(document.getElementById('not_client_id').textContent);
+  script_src = "https://www.paypal.com/sdk/js?client-id=" + document.getElementById("cool_script") + "&currency=GBP"
+  action_url_link.setAttribute('src', passed_src)
+</script>
 <script>
     // Render the PayPal button into #paypal-button-container
 
@@ -61,7 +68,7 @@
 </script>
 
 
-<div dir="ltr" style="text-align: left;" trbidi="on">
+<!-- <div dir="ltr" style="text-align: left;" trbidi="on">
   <script>
     (function(d, s, id) {
       var js, ref = d.getElementsByTagName(s)[0];
@@ -73,14 +80,50 @@
         ref.parentNode.insertBefore(js, ref);
       }
     }(document, "script", "paypal-js"));
-  </script>
+  </script> -->
   {{ action_url | json_script:"action-url" }}
+  <!-- <script>
+    function onboardedCallback(authCode, sharedId) {
+      console.log("-------------------")
+      console.log(authCode)
+      console.log(sharedId)
+      fetch('/seller-server/login-seller', {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json'
+        },
+        body: JSON.stringify({
+          authCode: authCode,
+          sharedId: sharedId
+        })
+      }).then(function(res) {
+        if (!response.ok) {
+          alert("Something went wrong!");
+        }
+        else{
+
+        }
+      });
+    }
+  </script>
+  <a id="link_for_action_url" target="_blank" data-paypal-onboard-complete="onboardedCallback" href="<Action-URL>&displayMode=minibrowser" data-paypal-button="true">Sign up for PayPal</a>
+  <script id="paypal-js" src="https://www.sandbox.paypal.com/webapps/merchantboarding/js/lib/lightbox/partner.js"></script> -->
+  <!-- <script>
+    const value = JSON.parse(document.getElementById('action-url').textContent) + "&displayMode=minibrowser";
+    console.log(value)
+    action_url_link = document.getElementById("link_for_action_url")
+    action_url_link.setAttribute('href', value)
+  </script> -->
+
+
+
+
   <!-- <form id="get_form" action="" method="get" target="_blank">
     <button type="submit">Click me!</button>
   </form> -->
   <div id="cool_fella"></div>
   <!-- <a id="action_url_holder" data-paypal-button="true" href="" target="PPFrame">Sign up for PayPal</a> -->
-  <script>
+  <!-- <script>
     const value = JSON.parse(document.getElementById('action-url').textContent);
     console.log(value)
     let newForm = document.createElement("FORM")
@@ -93,7 +136,7 @@
     newForm.append(newButton)
     const div = document.getElementById("cool_fella")
     div.append(newForm)
-    </script>
+    </script> -->
 </div>
 
 
