@@ -1,2 +1,5 @@
 .env
 Pipfile.lock
+community_store_app/db.sqlite3
+**db.sqlite3
+community_store_app/staticfiles

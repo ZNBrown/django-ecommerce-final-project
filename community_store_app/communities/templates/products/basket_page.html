@@ -1,0 +1,111 @@
+{% extends "communities/base.html" %}
+{% block title %}Basket{% endblock title %}
+
+{% block content %}
+<h4>Your basket</h4>
+      <ul class="list-group">
+        {% for product in products %}
+        <li class="list-group-item d-flex justify-content-between">
+          <div>
+            <img src="../../../media/{{product.image}}" alt="" />
+            <h6>{{product.title}}</h6>
+            <small>{{product.description}}</small>
+          </div>
+          <span>£{{product.price|floatformat:2}}</span>
+        </li>
+        {% endfor %}
+        <li class="list-group-item d-flex justify-content-between">
+          <span>Subtotal (GBP)</span>
+          <strong>£{{subtotal|floatformat:2}}</strong>
+        </li>
+        <li class="list-group-item d-flex justify-content-between">
+          <span>Total (GBP)</span>
+          <strong>£{{total|floatformat:2}}</strong>
+        </li>
+      </ul>
+<div class="btn-wrapper-right highlight hotspot">
+<!-- Set up a container element for the button -->
+<div id='paypal-button-container'></div>
+<!-- Include the PayPal JavaScript SDK -->
+<!-- <script src={{script_source}}></script> -->
+<script src='https://www.paypal.com/sdk/js?client-id=ATKw9NTm8MtV4AFn8bao8yyy_BvpBtMYpAXQQfG_gCe0q9RAbr8G605RyOxUorG9ozu5me2c2FAnblie&currency=GBP'></script>
+<script>
+    // Render the PayPal button into #paypal-button-container
+
+        // Render the PayPal button into #paypal-button-container
+        paypal.Buttons({
+
+
+          createOrder: function(data, actions) {
+                return actions.order.create({
+                    purchase_units: [{
+                        amount: {
+                            value: '00.01'
+                        }
+                    }]
+                });
+            },
+            // Finalize the transaction
+            onApprove: function(data, actions) {
+                return actions.order.capture().then(function(orderData) {
+                    // Successful capture! For demo purposes:
+                    console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
+                    var transaction = orderData.purchase_units[0].payments.captures[0];
+                    alert('Transaction '+ transaction.status + ': ' + transaction.id + '\n\nSee console for all available details');
+                })},
+            style: {
+                color:  'blue',
+                shape:  'pill',
+                label:  'pay',
+                height: 40
+            }
+        }).render('#paypal-button-container');
+</script>
+
+
+<div dir="ltr" style="text-align: left;" trbidi="on">
+  <script>
+    (function(d, s, id) {
+      var js, ref = d.getElementsByTagName(s)[0];
+      if (!d.getElementById(id)) {
+        js = d.createElement(s);
+        js.id = id;
+        js.async = true;
+        js.src = "https://www.paypal.com/webapps/merchantboarding/js/lib/lightbox/partner.js";
+        ref.parentNode.insertBefore(js, ref);
+      }
+    }(document, "script", "paypal-js"));
+  </script>
+  {{ action_url | json_script:"action-url" }}
+  <!-- <form id="get_form" action="" method="get" target="_blank">
+    <button type="submit">Click me!</button>
+  </form> -->
+  <div id="cool_fella"></div>
+  <!-- <a id="action_url_holder" data-paypal-button="true" href="" target="PPFrame">Sign up for PayPal</a> -->
+  <script>
+    const value = JSON.parse(document.getElementById('action-url').textContent);
+    console.log(value)
+    let newForm = document.createElement("FORM")
+    newForm.id = "newForm"
+    newForm.action = value + '&displayMode=minibrowser';
+    newForm.method = "GET"
+    let newButton = document.createElement("BUTTON")
+    newButton.type = "submit"
+    newButton.textContent = "CLick me!"
+    newForm.append(newButton)
+    const div = document.getElementById("cool_fella")
+    div.append(newForm)
+    </script>
+</div>
+
+
+
+
+<!-- curl -v POST https://api-m.sandbox.paypal.com/v1/oauth2/token \
+  -H "Accept: application/json" \
+  -H "Accept-Language: en_US" \
+  -u "ATKw9NTm8MtV4AFn8bao8yyy_BvpBtMYpAXQQfG_gCe0q9RAbr8G605RyOxUorG9ozu5me2c2FAnblie:EEIRKOZ40ehETBuVQ2BQGsiKqmsDmTHNTVI8r9H5Fh86doKwXkpvABUdcxH4pXYPHEaMdx2EyV-O5cxM" \
+  -d "grant_type=client_credentials" 
+  "access_token":"A21AALNvS6Ov3_MHfM7NNnkPKAAGmqDtgjwDSskZyiJBF3C42wdcftKCIRD7LUzKOeUd0AzEiyoWFdVz3j82xvh_1GzXs4xdA" -->
+
+{% endblock %}

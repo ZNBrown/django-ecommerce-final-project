@@ -1,0 +1,11 @@
+{% extends "communities/base.html" %}
+
+{% block title %}Join Community{% endblock title %}
+
+{% block content %}
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Request to Join">
+</form>
+{% endblock content %}
