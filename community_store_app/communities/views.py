@@ -26,7 +26,6 @@ def my_communities(request):
     data = {
         'communities': communities
     }
-
     return render(request, "communities/my_communities.html", data)
 
 @login_required
