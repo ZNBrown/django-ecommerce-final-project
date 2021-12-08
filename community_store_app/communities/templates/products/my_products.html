@@ -1,10 +1,10 @@
 {% extends "communities/base.html" %}
 
-{% block title %}{{community}}{% endblock title %}
+{% block title %}My Products{% endblock title %}
 
 {% block content %}
-<h2>{{community}}</h2>
-<h4>Here are all the products available</h4>
+<h2>My Products</h2>
+<h4>Here are all the products you are selling</h4>
 <div class="container">
     <section class="text-center mb-4">
         {% for product in products %}
@@ -12,10 +12,10 @@
             <div class="card">
                 <div>
                     <img src={{product.image}} alt="">
-                    <span>Sold by {{product.user_id}}</span>
+                    <span>For sale in {{product.community_id}}</span>
                 </div>
                 <div>
-                    <a href="{% url 'product' community.id product.id %}">
+                    <a href="{% url 'product' product.community.id product.id %}">
                         <h5>{{product.title}}</h5>
                     </a>
                     <p>{{product.description}}</p>
@@ -27,5 +27,5 @@
         {% endfor %}
     </section>
 </div>
-<button type="submit"><a href="{% url 'add-product' community.id %}">+ Add Product</a></button>
+
 {% endblock content %}
