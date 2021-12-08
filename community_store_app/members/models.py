@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.crypto import get_random_string
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.base_user import BaseUserManager
 from django.utils.translation import gettext_lazy as _
@@ -26,6 +27,7 @@ class CustomUserManager(BaseUserManager):
 
 class Member(AbstractUser):
     username = None
+    seller_nonce = get_random_string(length=48)
     email = models.EmailField(_('email address'), unique=True)
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
@@ -35,3 +37,11 @@ class Member(AbstractUser):
 #or at least return email right
     def __str__(self):
         return f'{self.email}'
+<<<<<<< HEAD
+
+
+class Basket(models.Model):
+    user_id = models.OneToOneField(Member, on_delete=models.SET_NULL, null=True)
+    
+=======
+>>>>>>> staging
