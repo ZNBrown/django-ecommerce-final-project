@@ -27,7 +27,7 @@ urlpatterns = [
     path('communities/', include('communities.urls')),
     path('signup/', member_views.signup, name='signup'),
     path('', auth_views.LoginView.as_view(template_name='members/login.html'), name='login'),
-    path('logout/', auth_views.LogoutView.as_view(template_name='members/login.html'), name='logout')
+    path('logout/', auth_views.LogoutView.as_view(template_name='members/logout.html'), name='logout')
 ] + static(settings.MEDIA_URL, document_root= settings.MEDIA_ROOT)
 
 handler404 = 'communities.views.not_found_404'

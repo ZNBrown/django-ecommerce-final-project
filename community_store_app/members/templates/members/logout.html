@@ -1,0 +1,9 @@
+{% extends "communities/base.html" %}
+
+{% block title %}Log Out{% endblock title %}
+
+{% block content %}
+<h2>Thanks for visiting!</h2>
+<span>To see your account, please log in.</span>
+<button type="submit"><a href="{% url 'login' %}">Login</a></button>
+{% endblock content %}
