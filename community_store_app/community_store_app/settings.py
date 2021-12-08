@@ -108,12 +108,12 @@ WSGI_APPLICATION = 'community_store_app.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'community_store_app',
-        'USER': 'punstoppable',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'dbtest',
+        'USER': 'postgres',
         'PORT': 5432,
         'HOST': 'localhost',
-        'PASSWORD': 'punstoppablepass'
+        'PASSWORD': 'password'
     }
 }
 
