@@ -167,7 +167,7 @@ PAYPAL_RECEIVER_EMAIL = 'zbchazach@gmail.com'
 PAYPAL_TEST = True
 
 #note: these might need to be strings ??
-URL='http://127.0.0.1:8000/'
+URL='https://django-lap4.herokuapp.com/'
 
 LOGIN_URL = URL
 
