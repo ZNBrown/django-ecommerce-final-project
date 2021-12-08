@@ -151,9 +151,10 @@ def basket_page(request):
     self_url = response.json()['links'][0]['href']
     print(response.json())
     print(action_url)
-    # print("----------------")
-    # print(request.user.seller_nonce)
-    # print("----------------")
+    print("----------------")
+    print(request.user.seller_nonce)
+    print("----------------")
+    seller_nonce = request.user.seller_nonce
 
     #---------------------------------------------------------
     #REQUEST 3: Build onboarding into software
@@ -162,9 +163,12 @@ def basket_page(request):
         'Authorization': f'Bearer {real_access_token}',
     }
 
-    data = '{    "operations": [      {        "operation": "API_INTEGRATION",        "api_integration_preference": {          "rest_api_integration": {            "integration_method": "PAYPAL",            "integration_type": "FIRST_PARTY",            "first_party_details": {              "features": [                "PAYMENT",                "REFUND"              ],              "seller_nonce": "<Seller-Nonce>"            }          }        }      }    ],    "products": [      "EXPRESS_CHECKOUT"    ],    "legal_consents": [      {        "type": "SHARE_DATA_CONSENT",        "granted": true      }    ]}'
+    data =  '{    "operations": [      {        "operation": "API_INTEGRATION",        "api_integration_preference": {          "rest_api_integration": {            "integration_method": "PAYPAL",            "integration_type": "FIRST_PARTY",            "first_party_details": {              "features": [                "PAYMENT",                "REFUND"              ],              "seller_nonce": "%s"            }          }        }      }    ],    "products": [      "EXPRESS_CHECKOUT"    ],    "legal_consents": [      {        "type": "SHARE_DATA_CONSENT",        "granted": true      }    ]}'%(seller_nonce)
 
     response = requests.post('https://api-m.sandbox.paypal.com/v2/customer/partner-referrals', headers=headers, data=data)
+    print("----------------")
+    print(response.json())
+    print("----------------")
 
 
 
