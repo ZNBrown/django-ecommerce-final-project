@@ -5,21 +5,23 @@
 {% block content %}
 <h2>My Products</h2>
 <h4>Here are all the products you are selling</h4>
-<div class="container">
-    <section class="text-center mb-4">
+<div class="container px-0 py-3">
+    <section class="text-center mb-2 d-flex flex-wrap align-items-stretch">
         {% for product in products %}
-        <div class="col-lg-3 col-md-6 mb-4">
-            <div class="card">
-                <div>
-                    <img src="../../../media/{{product.image}}" alt="">
-                    <span>For sale in {{product.community_id}}</span>
+        <div class="col-lg-3 col-sm-6 col-12 mb-4 d-flex justify-content-between">
+            <div class="card px-3 me-3 w-100">
+                <div class="product-image">
+                    <img class="py-2 pb-2" src="../../../media/{{product.image}}" alt="">
                 </div>
+                <span>For sale in {{product.community_id}}</span>
                 <div>
-                    <a href="{% url 'product' product.community.id product.id %}">
-                        <h5>{{product.title}}</h5>
+                    <a class="text-decoration-none text-reset" href="{% url 'product' product.community.id product.id %}">
+                        <h5><strong>{{product.title}}</strong></h5>
                     </a>
                     <p>{{product.description}}</p>
-                    <span><strong>Sold? {{product.sold_status}}</strong></span>
+                    {% if product.sold_status == True %}
+                        <span><strong>SOLD</strong></span>
+                    {% endif %}
                     <h4><strong>£{{product.price|floatformat:2}}</strong></h4>
                 </div>
             </div>

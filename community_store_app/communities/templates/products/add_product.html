@@ -3,10 +3,12 @@
 {% block title %}New Product{% endblock title %}
 
 {% block content %}
-<h4>Add Product</h4>
-<form method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="Add product">
-</form>
+<h2 class="pb-3">Add Product</h2>
+<div class="card">
+    <form method="POST" enctype="multipart/form-data" class="container py-3">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input class="btn btn-primary" type="submit" value="Add product">
+    </form>
+</div>
 {% endblock content %}

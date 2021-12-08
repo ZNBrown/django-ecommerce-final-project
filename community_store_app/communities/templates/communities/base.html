@@ -48,7 +48,7 @@
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
-          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0 ml-auto">
             <li class="nav-item">
               <a
                 class="nav-link active"
@@ -63,7 +63,6 @@
             <li class="nav-item">
               <a class="nav-link" href="{% url 'basket' %}">Basket</a>
             </li>
-            <hr />
             <li class="nav-item">
               <a class="nav-link" href="{% url 'join-community' %}"
                 >Join Community</a
@@ -76,6 +75,14 @@
         </div>
       </div>
     </nav>
-    <main>{% block content %}{% endblock content %}</main>
+    <main>
+      <div class="container py-5">
+        <div class="row">
+          <div class="col-lg-8">
+            {% block content %}{% endblock content %}
+          </div>
+        </div>
+      </div>
+    </main>
   </body>
 </html>

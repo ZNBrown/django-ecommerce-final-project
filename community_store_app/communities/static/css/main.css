@@ -11,11 +11,11 @@
     font-family: 'Raleway', sans-serif !important;
 }
 
-.navbar .navbar-nav {
-    display: inline-block;
+/* .navbar .navbar-nav {
+     display: inline-block;
     float: none;
-    vertical-align: top;
-}
+    vertical-align: top; */
+
 
 .navbar .navbar-collapse {
     text-align: center;
@@ -36,4 +36,14 @@ main {
 /* My Communities Page */
 .badge {
     color: var(--black);
+}
+
+form p input, form p textarea {
+    display: block;
+    width: 90%;
+}
+
+.product-image img {
+    width:80%;
+    height: auto
 }
