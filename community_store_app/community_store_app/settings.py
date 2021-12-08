@@ -24,6 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-$a&_=q_(d8lk(@r*jaw!==#v!kb%bgv-xnqyr88$q8ovo!x@uf'
 
 
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -168,6 +169,11 @@ PAYPAL_TEST = True
 #note: these might need to be strings ??
 URL='http://127.0.0.1:8000/'
 
+LOGIN_URL = URL
+
+LOGIN_REDIRECT_URL='communities/my-communities/'
+
+LOGOUT_REDIRECT_URL=''
 
 django_heroku.settings(locals())
 

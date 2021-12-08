@@ -1,6 +1,6 @@
 from django import forms
 from .models import Member
-from communities.models import Membership
+from communities.models import Membership, Request
 from django.contrib.auth.forms import UserCreationForm
 
 class SignUpForm(UserCreationForm):
@@ -13,9 +13,11 @@ class SignUpForm(UserCreationForm):
         fields = ['first_name', 'last_name', 'email', 'password1', 'password2']
 
 class JoinCommunityForm(forms.ModelForm):
-    community_name = forms.CharField(max_length=50)
-    reason = forms.CharField(widget=forms.Textarea)
-
     class Meta:
-        model = Membership
-        fields = ['community_name', 'reason']
+        model = Request
+        fields = ['user_id', 'community_id', 'reason']
+        widgets = {'user_id': forms.HiddenInput(), 'reason': forms.Textarea}
+
+    def __init__(self, *args, **kwargs):
+        super(JoinCommunityForm, self).__init__(*args, **kwargs)
+        self.fields['community_id'].label = "Community Name"

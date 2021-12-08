@@ -12,7 +12,10 @@
             <span>{{community.description}}</span>
             <br>
             <small><em>Based in {{community.location}}</em>
-                <span class="badge badge-secondary">{{member.member_role}}</span>
+                <span class="badge badge-secondary">{{community.member.member_role}}</span>
+                {% if community.member.member_role == "Admin" %}
+                    <button type="submit"><a href="{% url 'pending-requests' community.id %}">Pending Requests</a></button>
+                {% endif %}
             </small>
         </div>
     </li>

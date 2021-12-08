@@ -1,1 +1,29 @@
 {% extends "communities/base.html" %}
+{% block content %}
+<h2>{{community}}</h2>
+<h4>Here are all the pending requests</h4>
+<div class="container">
+    <section class="text-center mb-4">
+        {% for join_request in join_requests %}
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card">
+                <span>{{join_request.user_id}}</span>
+                <p>{{join_request.reason}}</p>
+                <form method="POST">
+                    {% csrf_token %}
+                    {{ join_request.form.as_p }}
+                    <input type="hidden" name="type" value="POST">
+                    <input type="submit" value="Accept">
+                </form>
+                <form method="POST">
+                    {% csrf_token %}
+                    {{ join_request.form.as_p }}
+                    <input type="hidden" name="type" value="DELETE">
+                    <input type="submit" value="Decline">
+                </form>
+            </div>
+        </div>
+        {% endfor %}
+    </section>
+</div>
+{% endblock content %}

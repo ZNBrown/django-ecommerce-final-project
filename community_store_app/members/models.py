@@ -37,8 +37,11 @@ class Member(AbstractUser):
 #or at least return email right
     def __str__(self):
         return f'{self.email}'
+<<<<<<< HEAD
 
 
 class Basket(models.Model):
     user_id = models.OneToOneField(Member, on_delete=models.SET_NULL, null=True)
     
+=======
+>>>>>>> staging

@@ -16,6 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from members import views as member_views
+from communities import views as community_views
 from django.contrib.auth import views as auth_views
 from django.conf import settings
 from django.conf.urls.static import static
@@ -23,11 +24,12 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    # path('members/', include('members.urls')),
     path('communities/', include('communities.urls')),
     path('signup/', member_views.signup, name='signup'),
-    path('login/', auth_views.LoginView.as_view(template_name='members/login.html'), name='login'),
+    path('', auth_views.LoginView.as_view(template_name='members/login.html'), name='login'),
+    path('logout/', auth_views.LogoutView.as_view(template_name='members/login.html'), name='logout')
 ] + static(settings.MEDIA_URL, document_root= settings.MEDIA_ROOT)
 
 handler404 = 'communities.views.not_found_404'
+handler405 = 'communities.views.method_not_allowed_405'
 handler500 = 'communities.views.server_error_500'
