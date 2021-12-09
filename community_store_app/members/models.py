@@ -28,6 +28,8 @@ class CustomUserManager(BaseUserManager):
 class Member(AbstractUser):
     username = None
     seller_nonce = get_random_string(length=48)
+    authcode = models.TextField(null=True, blank=True)
+    sharedId = models.TextField(null=True, blank=True)
     email = models.EmailField(_('email address'), unique=True)
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
