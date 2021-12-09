@@ -197,7 +197,8 @@ def basket_page(request):
     print(response)
     print(response.json())
     print("----------")
-    access_token = response.json().body["access_token"]
+    # access_token = response.json().body["access_token"]
+    access_token = "hello"
 
     headers = {
     'Authorization': f'Bearer {access_token}',
@@ -214,7 +215,7 @@ def basket_page(request):
         "products": Product.objects.all(),
         "subtotal": Product.objects.aggregate(subtotal=Sum('price'))['subtotal'],
         "total": Product.objects.aggregate(total=Sum('price'))['total'],
-        "client_id": response["client_id"], 
+        "client_id": "hello", 
         # "action_url" : action_url,
         # "onboarding_tag" : f'<a data-paypal-button="true" href="{action_url}&displayMode=minibrowser" target="PPFrame">Sign up for PayPal</a>',
         "script_source": f'https://www.paypal.com/sdk/js?client-id=ATKw9NTm8MtV4AFn8bao8yyy_BvpBtMYpAXQQfG_gCe0q9RAbr8G605RyOxUorG9ozu5me2c2FAnblie&currency=GBP'

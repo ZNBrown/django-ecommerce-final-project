@@ -3,13 +3,17 @@
 {% block title %}Sign Up{% endblock title %}
 
 {% block content %}
-<form method="POST">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="Sign Up">
-</form>
+<div class="card">
+    <form method="POST" class="container py-3">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <div class="d-flex justify-content-center">
+            <input class="btn btn-primary" type="submit" value="Sign Up">
+        </div>
+        </form>
+        <span class="d-flex justify-content-center">
+            <a class="text-decoration-none" href="{% url 'login' %}">Already registered?</a>
+        </span>
+</div>
 
-<span>
-    <a href="{% url 'login' %}">Already registered?</a>
-</span>
 {% endblock content %}
