@@ -228,8 +228,8 @@ def basket_page(request):
 
     data = {
         "products": Product.objects.filter(title="Headphones"),
-        "subtotal": Product.objects.aggregate(subtotal=Sum('price'))['subtotal'],
-        "total": Product.objects.aggregate(total=Sum('price'))['total'],
+        "subtotal": Product.objects.filter(title="Headphones").aggregate(subtotal=Sum('price'))['subtotal'],
+        "total": Product.objects.filter(title="Headphones").aggregate(total=Sum('price'))['total'],
         "client_id": client_id, 
         "merchant_id_in_paypal": merchant_id,
         "script_source": f'https://www.paypal.com/sdk/js?client-id=ATKw9NTm8MtV4AFn8bao8yyy_BvpBtMYpAXQQfG_gCe0q9RAbr8G605RyOxUorG9ozu5me2c2FAnblie&currency=GBP'
