@@ -227,7 +227,7 @@ def basket_page(request):
 
 
     data = {
-        "products": Product.objects.all(),
+        "products": Product.objects.filter(id=1),
         "subtotal": Product.objects.aggregate(subtotal=Sum('price'))['subtotal'],
         "total": Product.objects.aggregate(total=Sum('price'))['total'],
         "client_id": client_id, 
