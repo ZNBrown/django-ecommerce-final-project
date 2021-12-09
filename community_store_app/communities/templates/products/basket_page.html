@@ -7,7 +7,9 @@
         {% for product in products %}
         <li class="list-group-item d-flex justify-content-between">
           <div>
-            <img src="../../../media/{{product.image}}" alt="" />
+            <div class="product-image">
+              <img src="../../../media/{{product.image}}" alt="" />
+            </div>
             <h6>{{product.title}}</h6>
             <small>{{product.description}}</small>
           </div>
