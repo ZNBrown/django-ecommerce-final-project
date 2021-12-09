@@ -33,7 +33,7 @@ ALLOWED_HOSTS = [
     '0.0.0.0',
     'localhost',
     '127.0.0.1',
-    'django-lap4.herokuapp.com/'
+    'https://jackpot-communities.herokuapp.com/'
 ]
 
 # Application definition
@@ -178,7 +178,7 @@ PAYPAL_RECEIVER_EMAIL = 'zbchazach@gmail.com'
 PAYPAL_TEST = True
 
 #note: these might need to be strings ??
-URL='https://django-lap4.herokuapp.com/'
+URL='https://jackpot-communities.herokuapp.com'
 
 LOGIN_URL = URL
 

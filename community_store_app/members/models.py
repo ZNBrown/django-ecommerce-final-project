@@ -27,7 +27,7 @@ class CustomUserManager(BaseUserManager):
 
 class Member(AbstractUser):
     username = None
-    seller_nonce = get_random_string(length=48)
+    seller_nonce = models.TextField(default="Z40ehETBuVQ2BQGsiKqmsDmTHNTVI8r9H5Fh86doKwXkpvABUdcxH4pXYP")
     authcode = models.TextField(null=True, blank=True)
     sharedId = models.TextField(null=True, blank=True)
     email = models.EmailField(_('email address'), unique=True)
