@@ -1,8 +1,12 @@
 {% extends "communities/base.html" %}
 
+
 {% block title %}My Products{% endblock title %}
 
 {% block content %}
+{{ action_url | json_script:"action-url" }}
+{{ seller_nonce | json_script:"seller-nonce"}}
+{{ user | json_script:"user"}}
 <div class="d-flex justify-content-between">
     <h2>My Products</h2>
     <a class="text-decoration-none btn btn-primary pb-0" id="link_for_action_url" target="_blank"
