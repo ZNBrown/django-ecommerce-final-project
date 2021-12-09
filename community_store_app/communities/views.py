@@ -1,3 +1,4 @@
+from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.contrib import messages
@@ -6,7 +7,7 @@ from django.db.models import Sum
 from django.urls import reverse
 import requests
 from django.conf import settings
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse, response
 from django.views import View
 
 url = settings.URL
@@ -16,6 +17,7 @@ from .models import Community, Product, Membership, Request
 from .forms import CreateCommunityForm, AddProductForm, AcceptRequest
 from members.forms import JoinCommunityForm
 from members.models import Member
+import json
 
 @login_required
 def my_communities(request):
@@ -103,6 +105,20 @@ def community_page(request, community_id):
     }
     return render(request, "communities/community_page.html", data)
 
+def recieve_seller_info(request):
+    format_req = json.loads(request.body.decode("utf-8"))
+    print(format_req)
+
+    authcode = format_req["authCode"]
+    sharedId = format_req["sharedId"]
+    nonce = format_req["sellerNonce"]
+    user = Member.objects.filter(id=format_req["userId"])[0]
+    user.authcode = authcode
+    user.sharedId = sharedId
+    user.save()
+    response = HttpResponse("DONT COME HERE")
+    return response
+
 @login_required
 def my_products(request):
     products = Product.objects.filter(user_id=request.user)
@@ -114,24 +130,9 @@ def my_products(request):
     }
     return render(request, "products/my_products.html", data)
 
+
 @login_required
 def add_product(request, community_id):
-    if request.method == 'POST':
-        form = AddProductForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-            messages.success(request, f'Your product has been added')
-            return redirect(reverse('community-page', kwargs={"community_id": community_id}))    
-    else:
-        form = AddProductForm(initial={'user_id': request.user, 'community_id': community_id})
-    data = {'form': form}
-    return render(request, "products/add_product.html", data)
-
-
-#sb-r9gkz8895206@personal.example.com
-#DI/xD6cz
-@login_required
-def basket_page(request):    
     #PARTNER/OUR MARKET REQUEST TO GET OUR ACCESS TOKEN
     headers = {
         'Accept': 'application/json',
@@ -141,31 +142,12 @@ def basket_page(request):
     'grant_type': 'client_credentials'
     }
     response = requests.post('https://api-m.sandbox.paypal.com/v1/oauth2/token', headers=headers, data=data, 
+    #our client secret stuff (dont peek!)
     auth=('ATKw9NTm8MtV4AFn8bao8yyy_BvpBtMYpAXQQfG_gCe0q9RAbr8G605RyOxUorG9ozu5me2c2FAnblie', 'EEIRKOZ40ehETBuVQ2BQGsiKqmsDmTHNTVI8r9H5Fh86doKwXkpvABUdcxH4pXYPHEaMdx2EyV-O5cxM'))
     real_access_token = (response.json()['access_token'])
-    # personal_client_id = "ATKw9NTm8MtV4AFn8bao8yyy_BvpBtMYpAXQQfG_gCe0q9RAbr8G605RyOxUorG9ozu5me2c2FAnblie"
-
-
-    #------------------------------------------------------
-    #REQUEST 2: PERSONAL REQUEST TO SETUP ONBOARDING LINK FOR SELLERS
-    headers = {
-    'Content-Type': 'application/json',
-    'Authorization': f'Bearer {real_access_token}',
-    }
-    data = '{  "partner_config_override": { "return_url": "https://testenterprises.com/merchantonboarded"},    "tracking_id": "<Tracking-ID>",    "operations": [      {        "operation": "API_INTEGRATION",        "api_integration_preference": {          "rest_api_integration": {            "integration_method": "PAYPAL",            "integration_type": "THIRD_PARTY",            "third_party_details": {              "features": [                "PAYMENT",                "REFUND"             ]            }          }        }      }    ],    "products": [      "EXPRESS_CHECKOUT"    ],    "legal_consents": [      {        "type": "SHARE_DATA_CONSENT",        "granted": true      }    ]}'
-  
-    response = requests.post('https://api-m.sandbox.paypal.com/v2/customer/partner-referrals', headers=headers, data=data)
-    action_url = response.json()['links'][1]['href']
-    self_url = response.json()['links'][0]['href']
-    print(response.json())
-    print(action_url)
-    print("----------------")
-    print(request.user.seller_nonce)
-    print("----------------")
     seller_nonce = request.user.seller_nonce
 
-    #---------------------------------------------------------
-    #REQUEST 3: Build onboarding into software
+    #Onboarding stuff for selllers: need a business account to recieve funds
     headers = {
         'Content-Type': 'application/json',
         'Authorization': f'Bearer {real_access_token}',
@@ -175,8 +157,54 @@ def basket_page(request):
 
     response = requests.post('https://api-m.sandbox.paypal.com/v2/customer/partner-referrals', headers=headers, data=data)
     print("----------------")
+    action_url = response.json()['links'][1]['href']
+    self_url = response.json()['links'][0]['href']
+    print(self_url)
+    requests.get(self_url)
+
+    if request.method == 'POST':
+        form = AddProductForm(request.POST)
+        if form.is_valid():
+            form.save()
+            product_title = form.cleaned_data.get('product_title')
+            messages.success(request, f'Your product, {product_title}, has been added')
+            messages.success(request, f'{request.user}')
+            return redirect(reverse('community-page', kwargs={"community_id": community_id}))    
+    else:
+        form = AddProductForm(initial={'user_id': request.user, 'community_id': community_id})
+        data = {'form': form, 
+                "action_url" : action_url,
+                "seller_nonce" : seller_nonce,
+                "user" : request.user.id
+                }
+    return render(request, "products/add_product.html", data)
+
+
+#sb-r9gkz8895206@personal.example.com
+#DI/xD6cz
+@login_required
+def basket_page(request):    
+    #---------------------------------------------------------
+    #REQUEST 3: assemble access token
+    data = {
+    'grant_type': 'authorization_code',
+    'code': request.user.authcode,
+    'code_verifier': request.user.seller_nonce
+    }
+    print(request.user.sharedId)
+    response = requests.post('https://api-m.sandbox.paypal.com/v1/oauth2/token', data=data, auth=(request.user.sharedId, ''))
+    print("----------")
+    print(response)
     print(response.json())
-    print("----------------")
+    print("----------")
+    access_token = response.json().body["access_token"]
+
+    headers = {
+    'Authorization': f'Bearer {access_token}',
+    'Content-Type': 'application/json',
+    }
+
+    response = requests.get('https://api-m.sandbox.paypal.com/v1/customer/partners/HK3JGUX62WFZ8/merchant-integrations/credentials/', headers=headers)
 
 
 
@@ -186,8 +214,9 @@ def basket_page(request):
         "products": Product.objects.all(),
         "subtotal": Product.objects.aggregate(subtotal=Sum('price'))['subtotal'],
         "total": Product.objects.aggregate(total=Sum('price'))['total'],
-        "action_url" : action_url,
-        "onboarding_tag" : f'<a data-paypal-button="true" href="{action_url}&displayMode=minibrowser" target="PPFrame">Sign up for PayPal</a>',
+        "client_id": response["client_id"], 
+        # "action_url" : action_url,
+        # "onboarding_tag" : f'<a data-paypal-button="true" href="{action_url}&displayMode=minibrowser" target="PPFrame">Sign up for PayPal</a>',
         "script_source": f'https://www.paypal.com/sdk/js?client-id=ATKw9NTm8MtV4AFn8bao8yyy_BvpBtMYpAXQQfG_gCe0q9RAbr8G605RyOxUorG9ozu5me2c2FAnblie&currency=GBP'
     }
     return render(request, "products/basket_page.html", data)

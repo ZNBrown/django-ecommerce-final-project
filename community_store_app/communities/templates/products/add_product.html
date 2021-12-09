@@ -3,10 +3,52 @@
 {% block title %}New Product{% endblock title %}
 
 {% block content %}
+{{ action_url | json_script:"action-url" }}
+{{ seller_nonce | json_script:"seller-nonce"}}
+{{ user | json_script:"user"}}
+
+{% csrf_token %}
+
 <h4>Add Product</h4>
 <form method="POST" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="Add product">
 </form>
+<script>
+    // const csrf_funny = document.querySelector('input[type="hidden"]').value
+    let csrf_funny = Cookies.get('csrftoken');
+    console.log(csrf_funny)
+    function onboardedCallback(authCode, sharedId) {
+        const nonce = JSON.parse(document.getElementById('seller-nonce').textContent);
+        const user_id = JSON.parse(document.getElementById('user').textContent);
+        console.log(csrf_funny)
+        console.log("-------------------")
+        console.log(authCode)
+        console.log(sharedId)
+        fetch('/communities/paypal/details', {
+        method: 'POST',
+        headers: {
+            'content-type': 'application/json',
+            "X-CSRFToken": csrf_funny
+        },
+        body: JSON.stringify({
+            authCode: authCode,
+            sharedId: sharedId,
+            sellerNonce: nonce,
+            userId : user_id
+        }),
+        credentials: 'same-origin'
+        })
+    }
+  </script>
+  <a id="link_for_action_url" target="_blank" data-paypal-onboard-complete="onboardedCallback" href="<Action-URL>&displayMode=minibrowser" data-paypal-button="true">Sign up for PayPal</a>
+  <script id="paypal-js" src="https://www.sandbox.paypal.com/webapps/merchantboarding/js/lib/lightbox/partner.js"></script>
+  <script>
+    const value = JSON.parse(document.getElementById('action-url').textContent) + "&displayMode=minibrowser";
+    console.log(value)
+    action_url_link = document.getElementById("link_for_action_url")
+    action_url_link.setAttribute('href', value)
+  </script>
+
 {% endblock content %}
