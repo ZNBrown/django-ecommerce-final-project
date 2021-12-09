@@ -230,8 +230,6 @@ def basket_page(request):
         "total": Product.objects.aggregate(total=Sum('price'))['total'],
         "client_id": client_id, 
         "merchant_id_in_paypal": merchant_id,
-        # "action_url" : action_url,
-        # "onboarding_tag" : f'<a data-paypal-button="true" href="{action_url}&displayMode=minibrowser" target="PPFrame">Sign up for PayPal</a>',
         "script_source": f'https://www.paypal.com/sdk/js?client-id=ATKw9NTm8MtV4AFn8bao8yyy_BvpBtMYpAXQQfG_gCe0q9RAbr8G605RyOxUorG9ozu5me2c2FAnblie&currency=GBP'
     }
     return render(request, "products/basket_page.html", data)
