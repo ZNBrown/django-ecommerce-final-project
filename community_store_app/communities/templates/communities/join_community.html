@@ -3,12 +3,14 @@
 {% block title %}Join Community{% endblock title %}
 
 {% block content %}
-<h2 class="pb-3">Join Community</h2>
+<h2 class="pb-3 text-center">Join Community</h2>
 <div class="card">
     <form method="POST" class="container py-3">
         {% csrf_token %}
         {{ form.as_p }}
-        <input class="btn btn-primary" type="submit" value="Request to Join">
+        <div class="d-flex justify-content-center">
+            <input class="btn btn-primary" type="submit" value="Request to Join">
+        </div>
     </form>
 </div>
 {% endblock content %}

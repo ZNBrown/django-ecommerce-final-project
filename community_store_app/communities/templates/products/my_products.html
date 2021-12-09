@@ -3,13 +3,53 @@
 {% block title %}My Products{% endblock title %}
 
 {% block content %}
-<h2>My Products</h2>
-<h4>Here are all the products you are selling</h4>
+<div class="d-flex justify-content-between">
+    <h2>My Products</h2>
+    <a class="text-decoration-none btn btn-primary pb-0" id="link_for_action_url" target="_blank"
+        data-paypal-onboard-complete="onboardedCallback" href="<Action-URL>&displayMode=minibrowser"
+        data-paypal-button="true">Sign up for PayPal</a>
+    </div>
+    <script>
+        // const csrf_funny = document.querySelector('input[type="hidden"]').value
+        let csrf_funny = Cookies.get('csrftoken');
+        console.log(csrf_funny)
+        function onboardedCallback(authCode, sharedId) {
+            const nonce = JSON.parse(document.getElementById('seller-nonce').textContent);
+            const user_id = JSON.parse(document.getElementById('user').textContent);
+            console.log(csrf_funny)
+            console.log("-------------------")
+            console.log(authCode)
+            console.log(sharedId)
+            fetch('/communities/paypal/details', {
+                method: 'POST',
+                headers: {
+                    'content-type': 'application/json',
+                    "X-CSRFToken": csrf_funny
+                },
+                body: JSON.stringify({
+                    authCode: authCode,
+                    sharedId: sharedId,
+                    sellerNonce: nonce,
+                    userId: user_id
+                }),
+                credentials: 'same-origin'
+            })
+        }
+    </script>
+    <script id="paypal-js"
+        src="https://www.sandbox.paypal.com/webapps/merchantboarding/js/lib/lightbox/partner.js"></script>
+    <script>
+        const value = JSON.parse(document.getElementById('action-url').textContent) + "&displayMode=minibrowser";
+        console.log(value)
+        action_url_link = document.getElementById("link_for_action_url")
+        action_url_link.setAttribute('href', value)
+    </script>
+    <h4 class="mt-3 text-center">Here are all the products you are selling</h4>
 <div class="container px-0 py-3">
     <section class="text-center mb-2 d-flex flex-wrap align-items-stretch">
         {% for product in products %}
         <div class="col-lg-3 col-sm-6 col-12 mb-4 d-flex justify-content-between">
-            <div class="card px-3 me-3 w-100">
+            <div class="card px-3 me-3 w-100 py-3">
                 <div class="product-image">
                     <img class="py-2 pb-2" src="../../../media/{{product.image}}" alt="">
                 </div>
