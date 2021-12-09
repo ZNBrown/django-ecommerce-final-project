@@ -153,7 +153,7 @@ def add_product(request, community_id):
         'Authorization': f'Bearer {real_access_token}',
     }
 
-    data =  '{    "operations": [      {        "operation": "API_INTEGRATION",        "api_integration_preference": {          "rest_api_integration": {            "integration_method": "PAYPAL",            "integration_type": "FIRST_PARTY",            "first_party_details": {              "features": [                "PAYMENT",                "REFUND"              ],              "seller_nonce": "%s"            }          }        }      }    ],    "products": [      "EXPRESS_CHECKOUT"    ],    "legal_consents": [      {        "type": "SHARE_DATA_CONSENT",        "granted": true      }    ]}'%(seller_nonce)
+    data =  '{ "partner_config_override": { "return_url": "http://localhost:8000/communities/basket/"}, "operations": [      {        "operation": "API_INTEGRATION",        "api_integration_preference": {          "rest_api_integration": {            "integration_method": "PAYPAL",            "integration_type": "FIRST_PARTY",            "first_party_details": {              "features": [                "PAYMENT",                "REFUND"              ],              "seller_nonce": "%s"            }          }        }      }    ],    "products": [      "EXPRESS_CHECKOUT"    ],    "legal_consents": [      {        "type": "SHARE_DATA_CONSENT",        "granted": true      }    ]}'%(seller_nonce)
 
     response = requests.post('https://api-m.sandbox.paypal.com/v2/customer/partner-referrals', headers=headers, data=data)
     print("----------------")
@@ -197,8 +197,12 @@ def basket_page(request):
     print(response)
     print(response.json())
     print("----------")
-    # access_token = response.json().body["access_token"]
-    access_token = "hello"
+    try:
+        if (response.json()['error']):
+            access_token = "dummy"
+    except:
+        print(response.json())
+        access_token = response.json()["access_token"]
 
     headers = {
     'Authorization': f'Bearer {access_token}',
@@ -207,15 +211,25 @@ def basket_page(request):
 
     response = requests.get('https://api-m.sandbox.paypal.com/v1/customer/partners/HK3JGUX62WFZ8/merchant-integrations/credentials/', headers=headers)
 
+    try: 
+        if (response.json()['error']):
+            client_id = "dummy"
+    except:
+        print(response.json())
+        client_id = response.json()["client_id"]
 
 
+
+    merchant_id = request.GET.get('merchantIdInPayPal')
+    print(merchant_id)
 
 
     data = {
         "products": Product.objects.all(),
         "subtotal": Product.objects.aggregate(subtotal=Sum('price'))['subtotal'],
         "total": Product.objects.aggregate(total=Sum('price'))['total'],
-        "client_id": "hello", 
+        "client_id": client_id, 
+        "merchant_id_in_paypal": merchant_id,
         # "action_url" : action_url,
         # "onboarding_tag" : f'<a data-paypal-button="true" href="{action_url}&displayMode=minibrowser" target="PPFrame">Sign up for PayPal</a>',
         "script_source": f'https://www.paypal.com/sdk/js?client-id=ATKw9NTm8MtV4AFn8bao8yyy_BvpBtMYpAXQQfG_gCe0q9RAbr8G605RyOxUorG9ozu5me2c2FAnblie&currency=GBP'
