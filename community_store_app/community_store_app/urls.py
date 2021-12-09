@@ -21,11 +21,8 @@ from django.contrib.auth import views as auth_views
 from django.conf import settings
 from django.conf.urls.static import static
 
-<<<<<<< HEAD
 
 
-=======
->>>>>>> dev-paypal-fix
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('communities/', include('communities.urls')),
