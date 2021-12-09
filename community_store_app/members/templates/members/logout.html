@@ -5,5 +5,7 @@
 {% block content %}
 <h2>Thanks for visiting!</h2>
 <span>To see your account, please log in.</span>
-<button type="submit"><a href="{% url 'login' %}">Login</a></button>
+<div class="d-flex">
+    <a class="btn btn-primary mt-2" href="{% url 'login' %}">Login</a>
+</div>
 {% endblock content %}
