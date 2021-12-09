@@ -41,10 +41,6 @@ You can access the Jackpot website here [here](https://jackpot-communities.herok
 11. Added styling to our site using Bootstrap.
 12. Finished any testing and removed any unnecessary code.
 
-
-## Bugs
-
-
 ## Wins & Challenges
 
 ### Wins
