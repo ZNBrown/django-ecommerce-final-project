@@ -177,8 +177,6 @@ def add_product(request, community_id):
     else:
         form = AddProductForm(initial={'user_id': request.user, 'community_id': community_id})
         data = {'form': form, 
-                "action_url" : action_url,
-                "seller_nonce" : seller_nonce,
                 "user" : request.user.id
                 }
     return render(request, "products/add_product.html", data)
