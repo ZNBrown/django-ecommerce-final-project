@@ -32,20 +32,17 @@
 {{ merchant_id_in_paypal | json_script:"merchant_id" }}
 {{ total | json_script:"total" }}
 
-<script id="cool_script" src='https://www.paypal.com/sdk/js?client-id=sb'></script>
+<script id="paypal_sdk_script" src='https://www.paypal.com/sdk/js?client-id=sb'></script>
 <script>
   const passed_src = JSON.parse(document.getElementById('not_client_id').textContent);
   const merchant_id = JSON.parse(document.getElementById('merchant_id').textContent);
-  //script_src = "https://www.paypal.com/sdk/js?client-id=" + "sb" + "&currency=GBP"
-  //script_src = "https://www.paypal.com/sdk/js?client-id=ATKw9NTm8MtV4AFn8bao8yyy_BvpBtMYpAXQQfG_gCe0q9RAbr8G605RyOxUorG9ozu5me2c2FAnblie&merchant-id=" + merchant_id + "&currency=GBP"
-  script_src = "https://www.paypal.com/sdk/js?client-id=" + passed_src + "&merchant-id=" + merchant_id + "&currency=GBP"
-  document.getElementById("cool_script").setAttribute('src', script_src)
-  console.log(document.getElementById("cool_script"))
+  // script_src = "https://www.paypal.com/sdk/js?client-id=" + passed_src + "&merchant-id=" + merchant_id + "&currency=GBP"
+  script_src = 'https://www.paypal.com/sdk/js?client-id=ASDwZuNZr87gv5n7KDYYy2CMoFBmtz5wORvTA1x4cGn7iaOYMUUJwVQ8ULBoD3wbGjt0wCJSoMGqiAx6&merchant-id=GFNKNZWZHPRVA&currency=GBP'
+  document.getElementById("paypal_sdk_script").setAttribute('src', script_src)
+  console.log(document.getElementById("paypal_sdk_script"))
 </script>
 <script defer>
     const total = JSON.parse(document.getElementById('total').textContent);
-    // Render the PayPal button into #paypal-button-container
-
         // Render the PayPal button into #paypal-button-container
         paypal.Buttons({
           createOrder: function(data, actions) {
@@ -57,18 +54,10 @@
                     }]
                 });
             },
-            // Finalize the transaction
             onApprove: function(data, actions) {
                 return actions.order.capture().then(function(orderData) {
-                    // Successful capture! For demo purposes:
-                    // console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
-                    // var transaction = orderData.purchase_units[0].payments.captures[0];
-                    // alert('Transaction '+ transaction.status + ': ' + transaction.id + '\n\nSee console for all available details');
-                    // When ready to go live, remove the alert and show a success message within this page. For example:
-                    // var element = document.getElementById('paypal-button-container');
-                    // element.innerHTML = '';
-                    // element.innerHTML = '<h3>Thank you for your payment!</h3>';
-                    actions.redirect('https://django-lap4.herokuapp.com/communities/my-communities/');
+                    alert("Thank you for your purchase!");
+                    actions.redirect('http://localhost:8000/communities/my-communities/');
                 })},
             style: {
                 color:  'blue',
