@@ -121,18 +121,6 @@ def recieve_seller_info(request):
 
 @login_required
 def my_products(request):
-    products = Product.objects.filter(user_id=request.user)
-    for product in products:
-        product.community = Community.objects.filter(name=product.community_id)[0]
-
-    data = {
-        "products": products
-    }
-    return render(request, "products/my_products.html", data)
-
-
-@login_required
-def add_product(request, community_id):
     #PARTNER/OUR MARKET REQUEST TO GET OUR ACCESS TOKEN
     headers = {
         'Accept': 'application/json',
@@ -161,6 +149,22 @@ def add_product(request, community_id):
     self_url = response.json()['links'][0]['href']
     print(self_url)
     requests.get(self_url)
+    products = Product.objects.filter(user_id=request.user)
+    for product in products:
+        product.community = Community.objects.filter(name=product.community_id)[0]
+
+    data = {
+        "products": products,
+        "action_url" : action_url,
+        "seller_nonce" : seller_nonce,
+        "user" : request.user.id
+    }
+    return render(request, "products/my_products.html", data)
+
+
+@login_required
+def add_product(request, community_id):
+    
 
     if request.method == 'POST':
         form = AddProductForm(request.POST)

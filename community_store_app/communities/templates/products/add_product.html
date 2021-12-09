@@ -3,9 +3,6 @@
 {% block title %}New Product{% endblock title %}
 
 {% block content %}
-{{ action_url | json_script:"action-url" }}
-{{ seller_nonce | json_script:"seller-nonce"}}
-{{ user | json_script:"user"}}
 
 {% csrf_token %}
 
