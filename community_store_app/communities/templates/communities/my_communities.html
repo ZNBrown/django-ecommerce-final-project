@@ -3,24 +3,26 @@
 {% block title %}My Communities{% endblock title %}
 
 {% block content %}
-<h4>My Communities</h4>
+<h2 class="pb-3">My Communities</h2>
 <ul class="list-group">
     {% for community in communities %}
     <li class="list-group-item d-flex justify-content-between">
-        <div>
-            <a href="{% url 'community-page' community.id %}">{{community.name}}</a>
+        <div class="flex-fill">
+            <div class="d-flex justify-content-between py-2">
+                <a class="text-decoration-none text-reset" href="{% url 'community-page' community.id %}"><h5>{{community.name}}</h5></a>
+                {% if community.member.member_role == "Admin" %}
+                    <a class="btn btn-primary btn-sm" href="{% url 'pending-requests' community.id %}" role-="button">Pending Requests</a>
+                {% endif %}
+            </div>
             <br>
             <span>{{community.description}}</span>
             <br>
             <small><em>Based in {{community.location}}</em>
                 <span class="badge badge-secondary">{{community.member.member_role}}</span>
-                {% if community.member.member_role == "Admin" %}
-                    <button type="submit"><a href="{% url 'pending-requests' community.id %}">Pending Requests</a></button>
-                {% endif %}
             </small>
         </div>
     </li>
     {% endfor %}
 </ul>
-<button type="submit"><a href="{% url 'create-community' %}">+ Create Community</a></button>
+<a class="btn btn-primary my-4" href="{% url 'create-community' %}" role="button">+ Create Community</a>
 {% endblock content %}
