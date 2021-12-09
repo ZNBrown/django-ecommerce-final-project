@@ -54,7 +54,7 @@ You can access the Jackpot website here [here](https://jackpot-communities.herok
 * Issues when trying to deploy our database on Heroku. To resolve these issues, we moved from SQLite to Postresql.
 * We wanted users to be able to log in to their account using their email address rather than a username. To achieve this, we created a custom Member class.
 
-### Future Features
+## Future Features
 * Give users the option of posting their products to social media. We plan to implement this using Django social share.
 * Implement domain verifications so that communities for specific workplaces or universities include automatic verification for anyone requesting to join with a verified email address.
 * Allow admins to change the colour theme for their community for extra personalisation.
