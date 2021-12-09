@@ -1,25 +1,30 @@
-{% extends "communities/base.html" %}
-{% block title %}{{product}}{% endblock title %}
+{% extends "communities/base.html" %} {% block title %}{{product}}{% endblock
+title %} {% block content %}
+<div class="container px-0 py-3">
+  <section class="text-center mb-2 d-flex flex-wrap align-items-stretch">
+    <div class="col-lg-3 col-sm-6 col-12 mb-4 d-flex justify-content-between">
+      <div class="card px-3 me-3 w-100">
+        <h2>{{product}}</h2>
+        <div class="product-image">
+          <img
+            class="py-2 pb-2"
+            src="../../../../media/{{product.image}}"
+            alt=""
+          />
+        </div>
 
-{% block content %}
-<h2>{{product}}</h2>
-<img src="../../../../media/{{product.image}}" alt="" />
-<div class="container">
-    <div class="row">
-        <div>
+        <div class="product-info">
+          <p>
+            <span>£{{product.price|floatformat:2}}</span>
+          </p>
+          <strong>Description</strong>
+          <p>{{product.description}}</p>
+          <form class="d-flex justify-content-left">
+            <button class="btn btn-primary" type="submit">Add to basket</button>
+          </form>
         </div>
-        <div>
-            <div class="product-info">
-                <p>
-                    <span>£{{product.price|floatformat:2}}</span>
-                </p>
-                <strong>Description</strong>
-                <p>{{product.description}}</p>
-                <form class="d-flex justify-content-left">
-                    <button class="btn btn-primary" type="submit">Add to basket</button>
-                </form>
-            </div>
-        </div>
+      </div>
     </div>
+  </section>
 </div>
 {% endblock content %}
