@@ -179,7 +179,7 @@ PAYPAL_RECEIVER_EMAIL = 'zbchazach@gmail.com'
 PAYPAL_TEST = True
 
 #note: these might need to be strings ??
-URL='http://localhost:8000'
+URL='https://jackpot-communities.herokuapp.com'
 
 LOGIN_URL = URL
 
