@@ -16,7 +16,7 @@ urlpatterns = [
     path('paypal/details', views.recieve_seller_info, name="seller-info"),
     # attempt at cart
     path('cart/add', views.add_to_cart, name="add_to_cart"),
-    path('cart/remove', views.remove_from_cart, name="remove_from_cart"),
-    path('cart/view', views.get_cart, name="get_cart"),
+#     path('cart/remove', views.remove_from_cart, name="remove_from_cart"),
+#     path('cart/view', views.get_cart, name="get_cart"),
 
 ]
