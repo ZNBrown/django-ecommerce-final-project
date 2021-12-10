@@ -2,6 +2,9 @@
 {% block title %}{{product}}{% endblock title %}
 
 {% block content %}
+{{ user_id | json_script:"user_id"}}
+{{ product_id | json_script:"product_id"}}
+
 <h2>{{product}}</h2>
 <img src="../../../../media/{{product.image}}" alt="" />
 <div class="container">
@@ -16,7 +19,32 @@
                 <strong>Description</strong>
                 <p>{{product.description}}</p>
                 <form class="d-flex justify-content-left">
-                    <button class="btn btn-primary" type="submit">Add to basket</button>
+                    <script>
+
+                        let csrf_get = Cookies.get('csrftoken');
+                        function post_to_cart(authCode, sharedId) {
+                            const user_id = JSON.parse(document.getElementById('user_id').textContent);
+                            const product_id = JSON.parse(document.getElementById('product_id').textContent);
+
+                            fetch('/communities/cart/add', {
+                                method: 'POST',
+                                headers: {
+                                    'content-type': 'application/json',
+                                    "X-CSRFToken": csrf_get
+                                },
+                                body: JSON.stringify({
+                                    product_id: product_id,
+                                    user_id: user_id
+                                }),
+                                credentials: 'same-origin'
+                            })
+                        }
+
+
+
+
+                    </script>
+                    <button class="btn btn-primary" type='button' onclick="post_to_cart()">Add to basket</button>
                 </form>
             </div>
         </div>
