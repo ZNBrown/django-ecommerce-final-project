@@ -43,4 +43,5 @@ class Member(AbstractUser):
 
 class Basket(models.Model):
     user_id = models.OneToOneField(Member, on_delete=models.SET_NULL, null=True)
-    
+    def __str__(self):
+        return f'{self.user_id}'    

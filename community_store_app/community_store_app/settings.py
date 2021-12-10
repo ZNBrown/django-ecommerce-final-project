@@ -39,6 +39,7 @@ ALLOWED_HOSTS = [
 # Application definition
 # <appname>.apps.<AppConfigClass>
 INSTALLED_APPS = [
+    'cart',
     'members.apps.MembersConfig',
     "corsheaders",
     'communities.apps.CommunitiesConfig',
@@ -178,7 +179,7 @@ PAYPAL_RECEIVER_EMAIL = 'zbchazach@gmail.com'
 PAYPAL_TEST = True
 
 #note: these might need to be strings ??
-URL='https://jackpot-communities.herokuapp.com'
+URL='http://localhost:8000'
 
 LOGIN_URL = URL
 
