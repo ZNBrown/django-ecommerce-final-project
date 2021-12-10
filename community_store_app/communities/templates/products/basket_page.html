@@ -7,13 +7,15 @@
         {% for product in products %}
         <li class="list-group-item d-flex justify-content-between">
           <div>
-            <div class="product-image">
+            <div class="product-image-basket">
               <img src="../../../media/{{product.image}}" alt="" />
             </div>
-            <h6>{{product.title}}</h6>
-            <small>{{product.description}}</small>
+            <div class="d-flex justify-content-between">
+                  <h6>{{product.title}}</h6>
+                  <p>£{{product.price|floatformat:2}}</p>
+            </div>
+                <small>{{product.description}}</small>
           </div>
-          <p>£{{product.price|floatformat:2}}</p>
         </li>
         {% endfor %}
         <li class="list-group-item d-flex justify-content-between">
