@@ -1,7 +1,6 @@
 from django.urls import path
 from . import views
 #note: not sure where to import this from
-from communities.views import CreateCheckoutSessionView
 
 urlpatterns = [
     path('my-communities/', views.my_communities, name="my-communities"),
@@ -15,4 +14,9 @@ urlpatterns = [
     path('my-communities/<int:community_id>/new/', views.add_product, name="add-product"),
     # Add paypal details in productpage
     path('paypal/details', views.recieve_seller_info, name="seller-info"),
+    # attempt at cart
+    path('cart/add', views.add_to_cart, name="add_to_cart"),
+    path('cart/remove', views.remove_from_cart, name="remove_from_cart"),
+    path('cart/view', views.get_cart, name="get_cart"),
+
 ]

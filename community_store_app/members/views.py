@@ -1,12 +1,15 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from .forms import SignUpForm
+from .models import Basket, Member
 
 def signup(req):
     if req.method == 'POST':
         form = SignUpForm(req.POST)
         if form.is_valid():
             form.save()
+            basket = Basket(user_id=Member.objects.filter(email=form.cleaned_data.get('email'))[0])
+            basket.save()
             first_name = form.cleaned_data.get('first_name')
             messages.success(req, f'Welcome, {first_name}!')
             return redirect('my-communities')

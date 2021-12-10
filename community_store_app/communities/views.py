@@ -12,11 +12,11 @@ from django.views import View
 
 url = settings.URL
 
-
+from cart.cart import Cart
 from .models import Community, Product, Membership, Request
 from .forms import CreateCommunityForm, AddProductForm, AcceptRequest
 from members.forms import JoinCommunityForm
-from members.models import Member
+from members.models import Member, Basket
 import json
 
 @login_required
@@ -185,16 +185,21 @@ def add_product(request, community_id):
 #sb-r9gkz8895206@personal.example.com
 #DI/xD6cz
 @login_required
-def basket_page(request):    
+def basket_page(request):
+    basket = Basket.objects.filter(user_id=request.user)[0]
+    print(basket) 
+    basket2 = Product.objects.filter(baskets = basket)[0]
+    basket3 = Product.objects.filter(baskets = basket)
+    print(basket2)    
     #---------------------------------------------------------
-    #REQUEST 3: assemble access token
+    #REQUEST 3: assemble access token    
     data = {
     'grant_type': 'authorization_code',
-    'code': request.user.authcode,
-    'code_verifier': request.user.seller_nonce
+    'code': basket2.user_id.authcode,
+    'code_verifier': basket2.user_id.seller_nonce
     }
-    print(request.user.sharedId)
-    response = requests.post('https://api-m.sandbox.paypal.com/v1/oauth2/token', data=data, auth=(request.user.sharedId, ''))
+    print(basket2.user_id.sharedId)
+    response = requests.post('https://api-m.sandbox.paypal.com/v1/oauth2/token', data=data, auth=(basket2.user_id.sharedId, ''))
     print("----------")
     print(response)
     print(response.json())
@@ -226,21 +231,28 @@ def basket_page(request):
     print(merchant_id)
 
 
+
+
     data = {
-        "products": Product.objects.filter(title="Headphones"),
-        "subtotal": Product.objects.filter(title="Headphones").aggregate(subtotal=Sum('price'))['subtotal'],
-        "total": Product.objects.filter(title="Headphones").aggregate(total=Sum('price'))['total'],
+        "products": basket3,
+        "subtotal": basket3.aggregate(subtotal=Sum('price'))['subtotal'],
+        "total": basket3.aggregate(total=Sum('price'))['total'],
         "client_id": client_id, 
         "merchant_id_in_paypal": merchant_id,
         "script_source": f'https://www.paypal.com/sdk/js?client-id=ATKw9NTm8MtV4AFn8bao8yyy_BvpBtMYpAXQQfG_gCe0q9RAbr8G605RyOxUorG9ozu5me2c2FAnblie&currency=GBP'
     }
+    print("-0-0-0-0-0-0-0-0-0-0-0--0-0-0-0-")
+    print(data)
     return render(request, "products/basket_page.html", data)
 
 @login_required
 def product_page(request, community_id, product_id):
     data = {
         "community": Community.objects.filter(id=community_id)[0],
-        "product": Product.objects.filter(id=product_id)[0]
+        "product": Product.objects.filter(id=product_id)[0],
+        'user_id': request.user.id,
+        'product_id': Product.objects.filter(id=product_id)[0].id
+
     }
     return render(request, "products/product_page.html", data)
 
@@ -249,38 +261,6 @@ def logout_view(request):
     logout(request)
     return redirect('login')
 
-#note: dont know if i should be passing in Views 
-class CreateCheckoutSessionView(View):
-    def post(self, request, *args, **kwargs):
-        checkout_session = stripe.checkout.Session.create(
-            payment_method_types=['card'],
-            line_items=[
-                #note: need to add data for our actual products in here
-                {
-                    'price_data': {
-                        'currency': 'gbp',
-                        'unit_amount': 40, #this is in pence
-                        'product_data': {
-                            'name': 'demo product one',
-                            # 'images': ['image urls here'], #need to be publically available
-                        }
-                    },
-                    'quantity': 1,
-                },
-            ],
-            mode='payment',
-            success_url=("http://localhost:8000/communities/success/"),
-            cancel_url=("http://localhost:8000/communities/cancel/"),
-        )
-        return JsonResponse({
-            'id': checkout_session.id
-        })
-
-def success(request):
-    return(request, "products/success.html", data)
-
-def cancel(request):
-    return(request, "products/cancel.html", data)
 
 def not_found_404(request, exception):
     data = {'err': exception}
@@ -291,3 +271,27 @@ def method_not_allowed_405(request):
     
 def server_error_500(request):
     return render(request, 'communities/500.html')
+
+
+def add_to_cart(request):
+    format_req = json.loads(request.body.decode("utf-8"))
+    print(format_req)
+    product = Product.objects.get(id=format_req["product_id"])
+    user = Member.objects.get(id=format_req["user_id"])
+    print('000000')
+    print(Basket.objects.filter(user_id=user)[0])
+    product.baskets.add(Basket.objects.filter(user_id=user)[0])
+    product.save()
+    print(product.baskets.all())
+    response = HttpResponse("Backend route. Shoo!")
+    return response
+
+def remove_from_cart(request, product_id):
+    product = Product.objects.get(id=product_id)
+    cart = Cart(request)
+    cart.remove(product)
+
+def get_cart(request):
+    response = HttpResponse("Backend route. Shoo!")
+    return response
+
