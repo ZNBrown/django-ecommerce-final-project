@@ -39,7 +39,6 @@ ALLOWED_HOSTS = [
 # Application definition
 # <appname>.apps.<AppConfigClass>
 INSTALLED_APPS = [
-    'cart',
     'members.apps.MembersConfig',
     "corsheaders",
     'communities.apps.CommunitiesConfig',
