@@ -12,7 +12,6 @@ from django.views import View
 
 url = settings.URL
 
-from cart.cart import Cart
 from .models import Community, Product, Membership, Request
 from .forms import CreateCommunityForm, AddProductForm, AcceptRequest
 from members.forms import JoinCommunityForm
@@ -286,12 +285,12 @@ def add_to_cart(request):
     response = HttpResponse("Backend route. Shoo!")
     return response
 
-def remove_from_cart(request, product_id):
-    product = Product.objects.get(id=product_id)
-    cart = Cart(request)
-    cart.remove(product)
+# def remove_from_cart(request, product_id):
+#     product = Product.objects.get(id=product_id)
+#     cart = Cart(request)
+#     cart.remove(product)
 
-def get_cart(request):
-    response = HttpResponse("Backend route. Shoo!")
-    return response
+# def get_cart(request):
+#     response = HttpResponse("Backend route. Shoo!")
+#     return response
 
